@@ -288,6 +288,7 @@ dialog input,dialog select{background:var(--bg);color:var(--ink);border-color:va
   <div id="accountSlot" class="account-slot">
     <button id="accountButton" class="account-button" type="button">Entrar</button>
   </div>
+  <button id="scoreFull" class="hide" data-i="full" aria-label="Maximizar tela do placar"><span>Maximizar tela</span></button>
   <button id="menu" data-i="menu" aria-label="Abrir configurações"><span>Configurações</span></button>
   <div class="seg" id="mod" role="group" aria-label="Modalidade">
     <button data-v="volei">Vôlei</button><button data-v="futevolei">Futevôlei</button><button data-v="beach">Beach tennis</button>
@@ -346,7 +347,7 @@ function esc(s){return String(s).replace(/[&<>"]/g,function(c){return{'&':'&amp;
 
 function personName(value){return String(value||'').trim().toLocaleLowerCase('pt-BR').replace(/(^|[\s'-])([a-z\u00e0-\u00f6\u00f8-\u00ff])/g,function(_,sep,letter){return sep+letter.toLocaleUpperCase('pt-BR')})}
 
-var IC={vol:'<path d="M11 5 6 9H2v6h4l5 4V5z"/><path d="M15.5 8.5a5 5 0 0 1 0 7M19 5a10 10 0 0 1 0 14"/>',swap:'<path d="M8 3 4 7l4 4M4 7h16M16 21l4-4-4-4M20 17H4"/>',reset:'<path d="M3 12a9 9 0 1 0 3-6.7L3 8M3 3v5h5"/>',clock:'<circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/>',flag:'<path d="M4 22V4M4 4h13l-2 4 2 4H4"/>',sliders:'<path d="M4 6h8M18 6h2M4 12h2M12 12h8M4 18h10M20 18h0"/><circle cx="15" cy="6" r="2"/><circle cx="9" cy="12" r="2"/><circle cx="17" cy="18" r="2"/>',menu:'<path d="M4 7h16M4 12h16M4 17h16"/>',moon:'<path d="M21 12.8A9 9 0 1 1 11.2 3 7 7 0 0 0 21 12.8z"/>',sun:'<circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"/>',full:'<path d="M8 3H5a2 2 0 0 0-2 2v3M21 8V5a2 2 0 0 0-2-2h-3M3 16v3a2 2 0 0 0 2 2h3M16 21h3a2 2 0 0 0 2-2v-3"/>',edit:'<path d="M12 20h9M16.5 3.5a2.1 2.1 0 0 1 3 3L7 19l-4 1 1-4z"/>',ball:'<circle cx="12" cy="12" r="9"/><path d="M5.5 5.5c4 2.5 4 10.500 0 13M18.500 5.500c-4 2.500-4 10.500 0 13"/>'};
+var IC={vol:'<path d="M11 5 6 9H2v6h4l5 4V5z"/><path d="M15.5 8.5a5 5 0 0 1 0 7M19 5a10 10 0 0 1 0 14"/>',swap:'<path d="M8 3 4 7l4 4M4 7h16M16 21l4-4-4-4M20 17H4"/>',reset:'<path d="M3 12a9 9 0 1 0 3-6.7L3 8M3 3v5h5"/>',clock:'<circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/>',flag:'<path d="M4 22V4M4 4h13l-2 4 2 4H4"/>',sliders:'<path d="M4 6h8M18 6h2M4 12h2M12 12h8M4 18h10M20 18h0"/><circle cx="15" cy="6" r="2"/><circle cx="9" cy="12" r="2"/><circle cx="17" cy="18" r="2"/>',menu:'<path d="M4 7h16M4 12h16M4 17h16"/>',moon:'<path d="M21 12.8A9 9 0 1 1 11.2 3 7 7 0 0 0 21 12.8z"/>',sun:'<circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"/>',full:'<path d="M8 3H5a2 2 0 0 0-2 2v3M21 8V5a2 2 0 0 0-2-2h-3M3 16v3a2 2 0 0 0 2 2h3M16 21h3a2 2 0 0 0 2-2v-3"/>',exitfull:'<path d="M8 3v5H3M21 8h-5V3M3 16h5v5M16 21v-5h5"/>',edit:'<path d="M12 20h9M16.5 3.5a2.1 2.1 0 0 1 3 3L7 19l-4 1 1-4z"/>',ball:'<circle cx="12" cy="12" r="9"/><path d="M5.5 5.5c4 2.5 4 10.500 0 13M18.500 5.500c-4 2.500-4 10.500 0 13"/>'};
 function ic(n){return '<svg viewBox="0 0 24 24" aria-hidden="true">'+IC[n]+'</svg>'}
 /* apito */
 var ctx;
@@ -488,10 +489,38 @@ function dark(){return S.theme?S.theme==='dark':matchMedia('(prefers-color-schem
 function applyTheme(){document.documentElement.setAttribute('data-theme',dark()?'dark':'light');document.getElementById('theme').innerHTML=ic(dark()?'sun':'moon')+'<span>Tema</span>'}
 document.getElementById('theme').onclick=function(){S.theme=dark()?'light':'dark';applyTheme();save()};
 var fb=document.getElementById('full');
+var scoreFull=document.getElementById('scoreFull');
+function syncFullscreenControls(){
+  var isFullscreen=!!document.fullscreenElement;
+  [fb,scoreFull].forEach(function(button){
+    button.querySelector('span').textContent=isFullscreen?'Voltar ao normal':'Maximizar tela';
+    button.setAttribute('aria-label',isFullscreen?'Voltar ao normal':'Maximizar tela do placar');
+    button.dataset.i=isFullscreen?'exitfull':'full';
+    var icon=button.querySelector('svg');
+    if(icon)icon.innerHTML=IC[button.dataset.i];
+  });
+}
+async function toggleFullscreen(){
+  if(document.fullscreenElement)await document.exitFullscreen();
+  else await document.documentElement.requestFullscreen();
+}
+function bindFullscreenButton(button){
+  button.onclick=function(){
+    toggleFullscreen().catch(function(error){
+      console.error('Unable to change fullscreen mode',error);
+      var status=document.getElementById('st');
+      status.textContent='Não foi possível alterar o modo de tela cheia. Verifique as permissões do navegador.';
+      status.classList.remove('hide');
+    });
+  };
+}
 if(document.fullscreenEnabled){
   fb.classList.remove('hide');
-  fb.onclick=function(){document.fullscreenElement?document.exitFullscreen():document.documentElement.requestFullscreen().catch(function(){})};
-  document.addEventListener('fullscreenchange',function(){fb.querySelector('span').textContent=document.fullscreenElement?'Sair da tela cheia':'Tela cheia'});
+  scoreFull.classList.remove('hide');
+  bindFullscreenButton(fb);
+  bindFullscreenButton(scoreFull);
+  document.addEventListener('fullscreenchange',syncFullscreenControls);
+  syncFullscreenControls();
 }
 document.querySelectorAll('[data-i]').forEach(function(b){b.insertAdjacentHTML('afterbegin',ic(b.dataset.i))});
 document.getElementById('rules').onclick=function(){
@@ -765,7 +794,7 @@ function showAthleteHistory(){
  function draw(){var mod=document.getElementById('hfMod').value,month=document.getElementById('hfMonth').value,res=document.getElementById('hfResult').value;var filtered=list.filter(function(m){return(!mod||m.mod===mod)&&(!month||m.at.slice(0,7)===month)&&(!res||m.result===res)});document.getElementById('athleteHistoryList').innerHTML=filtered.length?filtered.map(function(m){var result=m.result==='win'?'<b style="color:#168447">Vitória</b>':m.result==='loss'?'<b style="color:#c33">Derrota</b>':'Resultado não definido';return '<div class="h"><div><b>'+esc(personName(m.A.name))+' '+esc(m.scoreText||((m.A.pts||0)+' × '+(m.B.pts||0)))+' '+esc(personName(m.B.name))+'</b><br><small>'+NAMES[m.mod]+' · '+new Date(m.at).toLocaleString('pt-BR')+' · '+esc(m.venue||'Local não informado')+' · '+result+'</small></div></div>'}).join(''):'<p>Jogue sua primeira partida para começar seu histórico.</p>'}
  ['hfMod','hfMonth','hfResult'].forEach(function(id){document.getElementById(id).onchange=draw});draw();
 }
-function activateAppTab(tab){activePane=tab;document.querySelectorAll('.tabs [data-tab]').forEach(function(button){button.setAttribute('aria-current',String(button.dataset.tab===tab))});document.getElementById('main').style.display=tab==='score'?'grid':'none';var profile=document.getElementById('profile');profile.style.display=tab==='profile'?'block':'none';profile.classList.remove('social-only');document.getElementById('st').classList.toggle('hide',tab!=='score');if(tab==='profile')renderProfile();if(tab==='history')showAthleteHistory()}
+function activateAppTab(tab){activePane=tab;document.querySelectorAll('.tabs [data-tab]').forEach(function(button){button.setAttribute('aria-current',String(button.dataset.tab===tab))});document.getElementById('main').style.display=tab==='score'?'grid':'none';scoreFull.classList.toggle('hide',tab!=='score'||!document.fullscreenEnabled);var profile=document.getElementById('profile');profile.style.display=tab==='profile'?'block':'none';profile.classList.remove('social-only');document.getElementById('st').classList.toggle('hide',tab!=='score');if(tab==='profile')renderProfile();if(tab==='history')showAthleteHistory()}
 window.activateAuthenticatedTab=activateAppTab;
 document.querySelectorAll('.tabs [data-tab]').forEach(function(button){button.onclick=function(){var tab=button.dataset.tab;if(tab!=='score'&&(!window.placaruaiSocialApi||!window.placaruaiSocialApi.ready())){window.pendingAuthenticatedTab=tab;window.openAccount();return}activateAppTab(tab)}});
 // Substitui a finalização simples para acrescentar local e metadados pessoais sem afetar partidas anônimas.
