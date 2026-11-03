@@ -68,6 +68,24 @@
     wireHistoryButtons(dialog);
   }
 
+  function showTournamentLibrary() {
+    var dialog = document.getElementById('tourDialog');
+    dialog.innerHTML =
+      '<div class="tour-shell"><div class="tour-head"><div><h2>Meus campeonatos</h2>' +
+      '<p>Seu histórico fica disponível sem assinatura.</p></div>' +
+      '<button class="tour-close" aria-label="Fechar">Fechar</button></div>' +
+      '<div class="tour-body"><div class="tour-panel"><div class="tour-title">Criar campeonato</div>' +
+      '<p class="tour-muted">A assinatura é solicitada somente quando você iniciar a criação de um torneio.</p>' +
+      '<button id="startTournament" class="go">Criar campeonato</button></div>' +
+      '<section id="tourHistory" class="tour-panel"><div class="tour-title">Histórico preservado</div>' +
+      renderHistoryList(remoteTournaments) + '<div id="finalReport"></div></section></div></div>';
+    dialog.querySelector('.tour-close').onclick = function () { dialog.close(); };
+    dialog.querySelector('#startTournament').onclick = function () {
+      showGate('Para criar e gerenciar um campeonato, ative a assinatura mensal. Seu histórico continua preservado.');
+    };
+    wireHistoryButtons(dialog);
+  }
+
   function renderHistoryList(list) {
     if (!list.length) return '<p class="tour-muted">Nenhum campeonato foi importado ou criado nesta conta.</p>';
     return '<div class="tour-list">' + list.map(function (tournament) {
@@ -435,7 +453,11 @@
     button.type = 'button';
     button.className = 'account-button';
     button.addEventListener('click', function () {
-      showAccountDialog();
+      if (currentUser && window.activateAuthenticatedTab) {
+        window.activateAuthenticatedTab('profile');
+      } else {
+        showAccountDialog();
+      }
     });
 
     if (!currentUser) {
@@ -482,8 +504,8 @@
     name.className = 'account-name';
     name.textContent = displayName;
     button.append(avatar, name);
-    button.setAttribute('aria-label', 'Abrir configurações da conta de ' + displayName);
-    button.title = 'Abrir configurações da conta';
+    button.setAttribute('aria-label', 'Abrir perfil de ' + displayName);
+    button.title = 'Abrir perfil';
     slot.replaceChildren(button);
   }
 
@@ -496,7 +518,12 @@
     }
     if (currentUser) {
       dialog.classList.remove('account-dialog-container');
-      loadSubscription().then(function (subscription) {
+      dialog.innerHTML = '<h2>Sua conta</h2><p>Conectado como <b>' +
+        window.esc(currentUser.email || '') + '</b>.</p><p class="hint">Carregando os dados da conta...</p>';
+      dialog.showModal();
+      loadSubscription().then(async function (subscription) {
+        await checkManagement();
+        if (!dialog.open) return;
         var active = canManage && subscription &&
           new Date(subscription.current_period_end).getTime() > Date.now();
         dialog.innerHTML = '<h2>Sua conta</h2><p>Conectado como <b>' +
@@ -538,7 +565,16 @@
         };
       }).catch(function (error) {
         console.error('Unable to load account subscription', error);
-        report('Não foi possível carregar a situação da assinatura.');
+        if (!dialog.open) return;
+        dialog.innerHTML = '<h2>Sua conta</h2><p>Conectado como <b>' +
+          window.esc(currentUser.email || '') + '</b>.</p>' +
+          '<p class="account-dialog-message error">Não foi possível carregar a situação da assinatura. Verifique a conexão e tente novamente.</p>' +
+          '<div class="row"><button id="accountRetry">Tentar novamente</button><button id="accountClose">Fechar</button></div>';
+        dialog.querySelector('#accountRetry').onclick = function () {
+          dialog.close();
+          showAccountDialog();
+        };
+        dialog.querySelector('#accountClose').onclick = function () { dialog.close(); };
       });
       return;
     }
@@ -988,31 +1024,45 @@
     var dialog = document.getElementById('tourDialog');
     dialog.showModal();
     if (!client) {
-      showGate('Configure o projeto Supabase para entrar. Nenhum gerenciamento local será autorizado.');
+      dialog.close();
+      showAccountDialog('signin');
       return;
     }
     var sessionResult = await client.auth.getSession();
     if (sessionResult.error) {
       console.error('Unable to validate current session', sessionResult.error);
-      showGate('Sua sessão expirou ou não pôde ser validada. Entre novamente para continuar.');
+      dialog.innerHTML =
+        '<div class="tour-shell"><div class="tour-head"><div><h2>Meus campeonatos</h2></div>' +
+        '<button class="tour-close" aria-label="Fechar">Fechar</button></div>' +
+        '<div class="tour-body"><p class="tour-muted">Não foi possível verificar sua sessão. Entre novamente e tente abrir os campeonatos.</p>' +
+        '<button id="retryTournamentLibrary">Tentar novamente</button></div></div>';
+      dialog.querySelector('.tour-close').onclick = function () { dialog.close(); };
+      dialog.querySelector('#retryTournamentLibrary').onclick = function () { openTournamentModule(); };
       return;
     }
     currentUser = sessionResult.data.session && sessionResult.data.session.user || null;
     if (!currentUser) {
-      showGate('Entre ou crie uma conta gratuita para consultar seus dados e assinar.');
+      dialog.close();
+      showAccountDialog('signin');
       return;
     }
     try {
       await Promise.all([checkManagement(), loadOwnedTournaments()]);
     } catch (error) {
       console.error('Unable to load account tournament data', error);
-      showGate('Não foi possível verificar a assinatura ou carregar o histórico.');
+      dialog.innerHTML =
+        '<div class="tour-shell"><div class="tour-head"><div><h2>Meus campeonatos</h2></div>' +
+        '<button class="tour-close" aria-label="Fechar">Fechar</button></div>' +
+        '<div class="tour-body"><p class="tour-muted">Não foi possível carregar seus campeonatos. Verifique a conexão e tente novamente.</p>' +
+        '<button id="retryTournamentLibrary">Tentar novamente</button></div></div>';
+      dialog.querySelector('.tour-close').onclick = function () { dialog.close(); };
+      dialog.querySelector('#retryTournamentLibrary').onclick = function () { openTournamentModule(); };
       return;
     }
     if (canManage) {
       window.renderTourManager();
     } else {
-      showGate('A autorização de gerenciamento depende de pagamento confirmado. O histórico continua disponível gratuitamente.');
+      showTournamentLibrary();
     }
   }
 
