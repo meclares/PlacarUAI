@@ -6,21 +6,27 @@
   <title>PlacarUai · Campeonatos publicados</title>
   <style>
     :root{font:15px/1.45 Inter,system-ui,sans-serif;color:#14202b;background:#eef2f6}
-    *{box-sizing:border-box}body{margin:0}button,input{font:inherit}
+    *{box-sizing:border-box}body{margin:0;min-width:320px}button,input{font:inherit}
     button{border:1px solid #ccd5de;border-radius:8px;background:#fff;padding:9px 13px;cursor:pointer}
-    .wrap{width:min(960px,100% - 32px);margin:28px auto}.panel{padding:16px;background:#fff;border:1px solid #d5dde6;border-radius:12px;margin:12px 0}
+    .wrap{width:min(960px,100% - 32px);margin:28px auto;padding-bottom:env(safe-area-inset-bottom)}.panel{padding:16px;background:#fff;border:1px solid #d5dde6;border-radius:12px;margin:12px 0}
     .muted{color:#5d6b7a}.list{display:grid;gap:8px}.item{width:100%;display:flex;justify-content:space-between;align-items:center;text-align:left;gap:12px}
-    .item small{display:block;color:#5d6b7a}.stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(130px,1fr));gap:8px}
+    .item small{display:block;color:#5d6b7a;margin-top:3px}.item>span:first-child{min-width:0;overflow-wrap:anywhere}.list h2{margin:14px 0 0;font-size:19px}.list h2:first-child{margin-top:0}.list>p{margin:0 0 4px}
+    .stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(130px,1fr));gap:8px}
     .stat{padding:12px;border:1px solid #d5dde6;border-radius:10px}.stat b{display:block;font-size:23px}
     table{width:100%;border-collapse:collapse;min-width:500px}th,td{text-align:left;padding:9px;border-bottom:1px solid #e3e8ed}
-    .scroll{overflow:auto}.error{color:#a12727}.account-link{display:inline-block;margin-top:12px;padding:10px 14px;border-radius:8px;background:#1f6feb;color:#fff;text-decoration:none;font-weight:700}
-    @media(max-width:600px){.wrap{width:calc(100% - 16px);margin:8px auto}}
+    .scroll{overflow:auto;-webkit-overflow-scrolling:touch}.error{color:#a12727}.account-link,.back-link{display:inline-flex;align-items:center;justify-content:center;min-height:42px;margin-top:12px;padding:9px 13px;border-radius:8px;background:#1f6feb;color:#fff;text-decoration:none;font-weight:700}
+    .back-link{margin:0;background:#edf3fa;color:#18344f}.back-button{margin-bottom:14px}.demo-note{padding:10px 12px;border:1px solid #ecd28a;border-radius:9px;background:#fff9e9;color:#694b00}
+    @media(max-width:600px){.wrap{width:calc(100% - 16px);margin:8px auto}.panel{padding:13px}.item{align-items:flex-start}.item>span:last-child{white-space:nowrap}.stats{grid-template-columns:repeat(2,minmax(0,1fr))}}
   </style>
 </head>
 <body>
   <main class="wrap">
-    <header class="panel"><h1>Campeonatos publicados</h1><p class="muted">Entre na sua conta para consultar resultados e classificações.</p></header>
-    <p id="message" class="muted" role="status">Carregando campeonatos...</p>
+    <header class="panel">
+      <a class="back-link" href="./PlacarUai.html">← Voltar ao PlacarUai</a>
+      <h1>Campeonatos públicos</h1>
+      <p class="muted">Acompanhe resultados, classificação e estatísticas. Campeonatos reais são atualizados automaticamente após a publicação.</p>
+    </header>
+    <p id="message" class="muted" role="status" aria-live="polite">Carregando campeonatos...</p>
     <section id="list" class="panel list"></section>
     <section id="detail"></section>
   </main>

@@ -1,0 +1,32 @@
+{
+  "id": "./PlacarUai.html",
+  "name": "PlacarUai",
+  "short_name": "PlacarUai",
+  "description": "Placar esportivo, perfil de atletas e acompanhamento de campeonatos.",
+  "start_url": "./PlacarUai.html",
+  "scope": "./",
+  "display": "fullscreen",
+  "orientation": "any",
+  "background_color": "#151c1d",
+  "theme_color": "#151c1d",
+  "icons": [
+    {
+      "src": "./assets/placaruai-icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "./assets/placaruai-icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "./assets/placaruai-icon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    }
+  ]
+}

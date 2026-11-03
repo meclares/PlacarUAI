@@ -3,15 +3,21 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#151c1d">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="PlacarUai">
 <meta name="robots" content="noindex,follow">
 <title>PlacarUai</title>
+<link rel="manifest" href="./manifest.webmanifest">
+<link rel="apple-touch-icon" href="./assets/placaruai-icon-192.png">
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@600;800&family=Inter:wght@400;500;600;700;800&display=swap">
 <style>
 :root{--bg:#eef2f6;--bar:#ffffff;--ink:#14202b;--mut:#5d6b7a;--line:#d5dde6;--blue:#1f6feb;--yel:#f5b700;--card:#ffffff;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
 @media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#0d141b;--bar:#16202a;--ink:#eef3f8;--mut:#93a2b3;--line:#27333f;--card:#1b2733}}
 :root[data-theme="dark"]{--bg:#0d141b;--bar:#16202a;--ink:#eef3f8;--mut:#93a2b3;--line:#27333f;--card:#1b2733}
 *{box-sizing:inherit;margin:0}
-html,body{height:100%}
+html,body{height:100%;height:100dvh}
 body{background:var(--bg);color:var(--ink);font:500 16px/1.3 Inter,system-ui,sans-serif;display:flex;flex-direction:column;overflow:hidden}
 button{font:inherit;color:inherit;cursor:pointer;border:1px solid var(--line);background:var(--bar);border-radius:10px;padding:10px 14px;min-height:44px}
 button:focus-visible,input:focus-visible{outline:3px solid var(--blue);outline-offset:2px}
@@ -123,7 +129,8 @@ dialog{margin:auto}
 #cfg .grid button{display:inline-flex;gap:8px;align-items:center;justify-content:center}
 .tabs{display:flex;gap:6px;justify-content:center;padding:7px;background:var(--bar);border-top:1px solid var(--line)}
 .tabs button{min-height:36px;padding:6px 14px}.tabs button[aria-current=true]{background:var(--ink);color:var(--bg)}
-#profile{display:none;flex:1;min-height:0;overflow:auto;padding:18px;background:var(--bg)}
+#profile{display:none;flex:1;min-width:0;min-height:0;overflow:auto;overscroll-behavior-y:contain;-webkit-overflow-scrolling:touch;scrollbar-width:none;-ms-overflow-style:none;padding:18px;background:var(--bg)}
+#profile::-webkit-scrollbar{display:none}
 .profile-wrap{width:min(100%,760px);margin:auto}.athlete-card{position:relative;overflow:hidden;border:1px solid #c9a84c;border-radius:22px;padding:22px;color:#f3f6fb;background:radial-gradient(ellipse at 85% 15%,#164b81 0,transparent 42%),linear-gradient(145deg,#071426,#102b49 55%,#101923);box-shadow:0 18px 45px #06101f55;transition:transform .2s,box-shadow .2s;cursor:pointer}
 .guest-profile{width:min(100%,820px);margin:0 auto 24px;display:grid;gap:16px}.guest-kicker{color:var(--lime);font-size:11px;font-weight:800;letter-spacing:.16em;text-transform:uppercase}.guest-heading{display:grid;gap:7px}.guest-heading h2{font:800 clamp(30px,6vw,42px)/1 'Barlow Condensed',sans-serif}.guest-heading p,.guest-copy{color:var(--mut);font-size:13px;line-height:1.55}.guest-athlete-card{position:relative;display:grid;grid-template-columns:120px 1fr;align-items:center;gap:18px;min-height:188px;overflow:hidden;padding:22px;border:1px solid #b8ff0055;border-radius:22px;background:radial-gradient(ellipse at 27% 45%,#b8ff0018,transparent 48%),linear-gradient(145deg,#101611,#0a0d0a 70%);box-shadow:0 16px 42px #0006}.guest-athlete-card:after{content:"";position:absolute;inset:10px;border:1px solid #ffffff0d;border-radius:15px;pointer-events:none}.guest-silhouette{display:grid;place-items:center;width:108px;height:108px;border:1px solid #c3e98e66;border-radius:50%;background:radial-gradient(circle,#c3e98e12,#0b100b 68%);box-shadow:0 0 25px #b8ff0024,inset 0 0 16px #b8ff0019;color:var(--lime)}.guest-silhouette svg{width:63px;height:63px;fill:none;stroke:currentColor;stroke-width:1.6;filter:drop-shadow(0 0 8px #b8ff0077)}.guest-athlete-meta{position:relative;z-index:1;display:grid;gap:7px}.guest-athlete-meta h3{font:800 28px 'Barlow Condensed',sans-serif}.guest-statline{display:flex;gap:14px;flex-wrap:wrap;color:#aab5a8;font-size:11px}.guest-statline b{color:#eaf1e4}.guest-lock{position:absolute;right:19px;top:17px;color:var(--lime);font-size:19px}.guest-first-game{margin-top:5px;color:#e3eccf;font-size:13px;font-weight:700}.guest-local-notice,.guest-rival,.guest-social-proof,.guest-community{padding:17px;border:1px solid #ffffff18;border-radius:17px;background:linear-gradient(145deg,#1b231b,#111511)}.guest-local-notice{display:flex;align-items:flex-start;gap:12px;border-color:#c3e98e48}.guest-notice-icon{display:grid;place-items:center;width:34px;height:34px;flex:none;border-radius:50%;background:#c3e98e18;color:var(--lime);font-size:18px}.guest-local-notice h3,.guest-rival h3,.guest-social-proof h3,.guest-community h3{margin-bottom:5px;font:800 21px 'Barlow Condensed',sans-serif}.guest-save-button,.guest-primary{border-color:var(--lime);background:var(--lime);color:#11170b;font-weight:800}.guest-save-button{margin-top:12px;min-height:40px;padding:8px 14px;font-size:12px}.guest-preview-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px}.guest-preview-card{position:relative;display:grid;min-height:106px;place-items:center;gap:5px;overflow:hidden;padding:14px 8px;border-color:#ffffff20;background:linear-gradient(145deg,#20271f,#111510);text-align:center}.guest-preview-card:before{content:"";position:absolute;inset:0;background:linear-gradient(120deg,transparent 10%,#ffffff08 50%,transparent 80%);pointer-events:none}.guest-preview-content{display:grid;place-items:center;gap:5px;filter:blur(1.1px);opacity:.72}.guest-preview-card svg{width:23px;height:23px;stroke:var(--lime);fill:none;stroke-width:1.8;opacity:.7}.guest-preview-card b{font-size:12px}.guest-preview-card small{color:var(--mut);font-size:10px}.guest-preview-lock{position:absolute;right:8px;top:7px;color:var(--lime);font-size:12px}.guest-social-proof{display:grid;gap:12px}.guest-proof-count{color:#edf4e5;font-size:13px;font-weight:700}.guest-activity-list{display:flex;gap:9px;overflow-x:auto;padding:2px 1px 9px;scroll-snap-type:x mandatory}.guest-activity-card{display:grid;gap:5px;flex:0 0 min(78vw,235px);padding:12px;border:1px solid #ffffff17;border-radius:13px;background:#0d110d;scroll-snap-align:start}.guest-activity-card b{color:var(--lime);font-size:12px}.guest-activity-card strong{font-size:12px;line-height:1.4}.guest-activity-card small,.guest-activity-empty{color:var(--mut);font-size:11px}.guest-rival{background:radial-gradient(ellipse at 100% 0,#c3e98e12,transparent 58%),#121713}.guest-community{position:relative;overflow:hidden;background:radial-gradient(ellipse at 0 100%,#b8ff0014,transparent 58%),linear-gradient(145deg,#1b241b,#101410)}.guest-community-art{display:flex;align-items:center;justify-content:center;gap:8px;margin:12px 0;color:var(--lime)}.guest-community-orb{display:grid;place-items:center;width:48px;height:48px;border:1px solid #c3e98e66;border-radius:50%;background:#c3e98e12;box-shadow:0 0 18px #b8ff002b;font-size:19px}.guest-community-orb:nth-child(2){width:60px;height:60px;background:#c3e98e20}.guest-cta{display:grid;gap:9px;padding:7px 0 4px;text-align:center}.guest-cta .guest-primary{width:100%;min-height:52px;font-size:14px}.guest-login-link,.guest-public-link{width:max-content;max-width:100%;margin:auto;padding:7px 5px;border:0;background:transparent;color:var(--lime);font-size:12px;font-weight:700;text-decoration:none}.guest-public-link{color:var(--mut);font-weight:500;text-decoration:underline;text-underline-offset:3px}
 @media(max-width:600px){#profile{padding:14px 12px}.guest-profile{gap:13px}.guest-athlete-card{grid-template-columns:82px 1fr;gap:12px;min-height:156px;padding:17px}.guest-silhouette{width:76px;height:76px}.guest-silhouette svg{width:48px;height:48px}.guest-athlete-meta h3{font-size:24px}.guest-statline{gap:7px;font-size:10px}.guest-preview-grid{grid-template-columns:repeat(2,minmax(0,1fr));gap:8px}.guest-preview-card{min-height:96px}.guest-local-notice,.guest-rival,.guest-social-proof,.guest-community{padding:14px}}
@@ -299,7 +306,6 @@ dialog input,dialog select{background:var(--bg);color:var(--ink);border-color:va
 .social-actions{display:flex;gap:6px;flex-wrap:wrap;margin-top:8px}.social-error{padding:10px;border-radius:12px;background:#a9333320;color:#ff8888;font-size:13px}
 .match-invite-results{display:grid;gap:5px;margin-top:6px}.match-invite-results button{width:100%;display:flex;justify-content:space-between;align-items:center;min-height:38px;padding:6px 10px;text-align:left}.match-invite-chip{display:inline-flex;align-items:center;gap:6px;margin:5px 5px 0 0;padding:5px 8px;border:1px solid var(--line);border-radius:999px;color:var(--ink);font-size:12px}.match-invite-chip button{min-height:22px;padding:0 3px;border:0;background:transparent;color:var(--mut)}
 html:fullscreen,html:fullscreen body{width:100%;height:100%;overflow:hidden}
-html:fullscreen body>header,html:fullscreen body>#st,html:fullscreen body>.tabs,html:fullscreen body>footer,html:fullscreen body>#profile{display:none!important}
 html:fullscreen body>#main{flex:1;width:100%;height:100%;min-height:0;padding:clamp(8px,2vw,24px)}
 html:fullscreen body>#main #scoreFull{position:fixed;top:max(10px,env(safe-area-inset-top));right:max(10px,env(safe-area-inset-right));z-index:20;min-height:44px;padding:8px 14px;border:1px solid var(--line);border-radius:999px;background:color-mix(in srgb,var(--bar) 90%,transparent);color:var(--ink);box-shadow:0 4px 18px #0005}
 html:fullscreen body>#main #scoreFull span{position:static;width:auto;height:auto;overflow:visible;clip:auto}
@@ -355,6 +361,9 @@ html:fullscreen body>#main #scoreFull span{position:static;width:auto;height:aut
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.118.0/dist/umd/supabase.js"></script>
 <script src="./supabase-client-config.js"></script>
 <script src="./auth-storage.js"></script>
+<script>
+if('serviceWorker' in navigator&&window.isSecureContext)navigator.serviceWorker.register('./service-worker.js').catch(function(error){console.error('Unable to register the PlacarUai app service worker',error)});
+</script>
 <script>
 var KEY='placaruai.v1',HKEY='placaruai.hist.v1';
 var PKEY='placaruai.profile.v1', AKEY='placaruai.account.v1', RKEY='placaruai.accounts.v1', LKEY='placaruai.athlete.matches.v1', FBKEY='placaruai.profile.feedback.v1', TKEY='placaruai.tournaments.v1';
@@ -524,22 +533,47 @@ function applyTheme(){document.documentElement.setAttribute('data-theme',dark()?
 document.getElementById('theme').onclick=function(){S.theme=dark()?'light':'dark';applyTheme();save()};
 var fb=document.getElementById('full');
 var scoreFull=document.getElementById('scoreFull');
+var deferredInstallPrompt=null;
+window.addEventListener('beforeinstallprompt',function(event){
+  event.preventDefault();
+  deferredInstallPrompt=event;
+});
+window.addEventListener('appinstalled',function(){deferredInstallPrompt=null});
 function syncFullscreenControls(){
   var isFullscreen=!!document.fullscreenElement;
-  var main=document.getElementById('main'),header=document.querySelector('header');
-  if(isFullscreen)main.appendChild(scoreFull);
-  else header.insertBefore(scoreFull,document.getElementById('menu'));
   [fb,scoreFull].forEach(function(button){
-    button.querySelector('span').textContent=isFullscreen?'Voltar ao normal':'Maximizar tela';
-    button.setAttribute('aria-label',isFullscreen?'Voltar ao normal':'Maximizar tela do placar');
+    button.querySelector('span').textContent=isFullscreen?'Voltar ao normal':'Tela cheia';
+    button.setAttribute('aria-label',isFullscreen?'Voltar ao normal':'Expandir o PlacarUai para tela cheia');
     button.dataset.i=isFullscreen?'exitfull':'full';
     var icon=button.querySelector('svg');
     if(icon)icon.innerHTML=IC[button.dataset.i];
   });
 }
 async function toggleFullscreen(){
-  if(document.fullscreenElement)await document.exitFullscreen();
-  else await document.documentElement.requestFullscreen();
+  if(document.fullscreenElement){
+    await document.exitFullscreen();
+    return;
+  }
+  if(document.fullscreenEnabled&&document.documentElement.requestFullscreen){
+    await document.documentElement.requestFullscreen();
+    return;
+  }
+  if(deferredInstallPrompt){
+    var installPrompt=deferredInstallPrompt;
+    deferredInstallPrompt=null;
+    await installPrompt.prompt();
+    var choice=await installPrompt.userChoice;
+    if(choice&&choice.outcome==='accepted')return;
+  }
+  var isStandalone=(window.matchMedia&&window.matchMedia('(display-mode: standalone)').matches)||navigator.standalone===true;
+  var isAppleMobile=/iPhone|iPad|iPod/.test(navigator.userAgent)||
+    (navigator.platform==='MacIntel'&&navigator.maxTouchPoints>1);
+  var instructions=isStandalone
+    ? 'O PlacarUai já está aberto como app e ocupa a área disponível. Gire o dispositivo para aproveitar o modo paisagem.'
+    : isAppleMobile
+    ? 'No Safari, toque em Compartilhar e escolha “Adicionar à Tela de Início”. Depois, abra o ícone do PlacarUai para usar o app sem as barras do navegador.'
+    : 'Este navegador não permite tela cheia nesta página. Use o menu do navegador para instalar ou adicionar o PlacarUai à tela inicial e abra o app pelo novo ícone.';
+  open('<h2>Usar o PlacarUai em tela cheia</h2><p>'+instructions+'</p>',null,null,'Fechar');
 }
 function bindFullscreenButton(button){
   button.onclick=function(){
@@ -551,11 +585,11 @@ function bindFullscreenButton(button){
     });
   };
 }
+fb.classList.remove('hide');
+scoreFull.classList.remove('hide');
+bindFullscreenButton(fb);
+bindFullscreenButton(scoreFull);
 if(document.fullscreenEnabled){
-  fb.classList.remove('hide');
-  scoreFull.classList.remove('hide');
-  bindFullscreenButton(fb);
-  bindFullscreenButton(scoreFull);
   document.addEventListener('fullscreenchange',syncFullscreenControls);
   syncFullscreenControls();
 }
@@ -963,7 +997,7 @@ function showAthleteHistory(){
  function draw(){var mod=document.getElementById('hfMod').value,month=document.getElementById('hfMonth').value,res=document.getElementById('hfResult').value;var filtered=list.filter(function(m){return(!mod||m.mod===mod)&&(!month||m.at.slice(0,7)===month)&&(!res||m.result===res)});document.getElementById('athleteHistoryList').innerHTML=filtered.length?filtered.map(function(m){var result=m.result==='win'?'<b style="color:#168447">Vitória</b>':m.result==='loss'?'<b style="color:#c33">Derrota</b>':'Resultado não definido';return '<div class="h"><div><b>'+esc(personName(m.A.name))+' '+esc(m.scoreText||((m.A.pts||0)+' × '+(m.B.pts||0)))+' '+esc(personName(m.B.name))+'</b><br><small>'+NAMES[m.mod]+' · '+new Date(m.at).toLocaleString('pt-BR')+' · '+esc(m.venue||'Local não informado')+' · '+result+'</small></div></div>'}).join(''):'<p>Jogue sua primeira partida para começar seu histórico.</p>'}
  ['hfMod','hfMonth','hfResult'].forEach(function(id){document.getElementById(id).onchange=draw});draw();
 }
-function activateAppTab(tab){activePane=tab;document.querySelectorAll('.tabs [data-tab]').forEach(function(button){button.setAttribute('aria-current',String(button.dataset.tab===tab))});document.getElementById('main').style.display=tab==='score'?'grid':'none';scoreFull.classList.toggle('hide',tab!=='score'||!document.fullscreenEnabled);var profile=document.getElementById('profile');profile.style.display=tab==='profile'?'block':'none';profile.classList.remove('social-only');document.getElementById('st').classList.toggle('hide',tab!=='score');if(tab==='profile')renderProfile();if(tab==='history')showAthleteHistory()}
+function activateAppTab(tab){activePane=tab;document.querySelectorAll('.tabs [data-tab]').forEach(function(button){button.setAttribute('aria-current',String(button.dataset.tab===tab))});document.getElementById('main').style.display=tab==='score'?'grid':'none';var profile=document.getElementById('profile');profile.style.display=tab==='profile'?'block':'none';profile.classList.remove('social-only');document.getElementById('st').classList.toggle('hide',tab!=='score');if(tab==='profile')renderProfile();if(tab==='history')showAthleteHistory()}
 window.activateAuthenticatedTab=activateAppTab;
 document.querySelectorAll('.tabs [data-tab]').forEach(function(button){button.onclick=function(){var tab=button.dataset.tab;if(tab!=='score'&&(!window.placaruaiSocialApi||!window.placaruaiSocialApi.ready())){window.pendingAuthenticatedTab=tab;window.openAccount();return}activateAppTab(tab)}});
 var NAV_COLLAPSED_KEY='placaruai.navigation.collapsed.v1',navigation=document.getElementById('appNavigation'),navigationToggle=document.getElementById('tabsToggle'),landscapeQuery=window.matchMedia('(orientation: landscape) and (max-height: 520px)'),savedNavigationState=ld(NAV_COLLAPSED_KEY,null),navigationCollapsed=savedNavigationState===null?landscapeQuery.matches:savedNavigationState===true;
