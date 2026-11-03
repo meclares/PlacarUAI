@@ -1,0 +1,19 @@
+[functions.mercadopago-webhook]
+verify_jwt = false
+
+[auth]
+site_url = "http://127.0.0.1:8765"
+additional_redirect_urls = ["http://127.0.0.1:8765/**"]
+minimum_password_length = 8
+
+[auth.email]
+enable_confirmations = true
+otp_expiry = 3600
+
+[auth.email.template.confirmation]
+subject = "Bem-vindo ao Placar Uai! Confirme seu e-mail para entrar em quadra"
+content_path = "./supabase/templates/confirmation.html"
+
+[auth.email.template.recovery]
+subject = "Redefinir sua senha do Placar Uai"
+content_path = "./supabase/templates/recovery.html"

@@ -1,0 +1,7 @@
+node_modules/
+.env
+.env.*
+!.env.example
+user.env
+supabase/up.txt
+supabase/.env

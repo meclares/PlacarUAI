@@ -1,0 +1,76 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="robots" content="noindex,nofollow">
+  <title>PlacarUai · Olho de Deus</title>
+  <style>
+    :root{font:15px/1.45 Inter,system-ui,sans-serif;color:#14202b;background:#eef2f6}
+    *{box-sizing:border-box}body{margin:0}button,input,select{font:inherit}
+    button{border:1px solid #ccd5de;border-radius:8px;background:#fff;padding:9px 13px;cursor:pointer}
+    button:focus-visible,input:focus-visible,select:focus-visible{outline:3px solid #1f6feb;outline-offset:2px}
+    .wrap{width:min(1200px,100% - 32px);margin:28px auto}
+    .bar,.panel,.metric{background:#fff;border:1px solid #d5dde6;border-radius:12px;padding:16px}
+    .bar{display:flex;align-items:center;gap:12px;flex-wrap:wrap}
+    .bar h1{font-size:23px;margin:0 auto 0 0}.muted{color:#5d6b7a}
+    .filters,.tabs{display:flex;gap:8px;flex-wrap:wrap;margin:14px 0}
+    .tabs button[aria-current=true],.primary{background:#14202b;color:#fff;border-color:#14202b}
+    .grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(170px,1fr));gap:12px}
+    .metric small{display:block;color:#5d6b7a}.metric strong{display:block;font-size:25px;margin-top:8px}
+    .panel{margin-top:14px;overflow:auto}.hidden{display:none!important}
+    table{width:100%;border-collapse:collapse;min-width:650px}
+    th,td{text-align:left;padding:10px;border-bottom:1px solid #e3e8ed;vertical-align:top}
+    th{font-size:12px;text-transform:uppercase;color:#5d6b7a}
+    tr[data-user-id]{cursor:pointer}tr[data-user-id]:hover{background:#f4f7fa}
+    .login{max-width:420px;margin:12vh auto}.login h1{margin-top:0}
+    .login label{display:block;margin:12px 0 5px}.login input{width:100%;padding:10px;border:1px solid #ccd5de;border-radius:8px}
+    .error{color:#a12727;min-height:1.5em}.success{color:#166534}
+    .detail{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:10px}
+    .detail p{margin:4px 0}.pager{display:flex;gap:8px;align-items:center;justify-content:flex-end;margin-top:10px}
+    @media(max-width:600px){.wrap{width:calc(100% - 16px);margin:8px auto}.bar{padding:12px}.bar h1{font-size:20px}}
+  </style>
+</head>
+<body>
+  <main class="wrap">
+    <section id="login" class="panel login">
+      <h1>Olho de Deus</h1>
+      <p class="muted">Acesso administrativo autenticado. A permissão master é verificada no servidor.</p>
+      <label for="email">E-mail</label><input id="email" type="email" autocomplete="username">
+      <label for="password">Senha</label><input id="password" type="password" autocomplete="current-password">
+      <p id="loginError" class="error" role="status"></p>
+      <button id="loginButton" class="primary">Entrar</button>
+    </section>
+    <section id="dashboard" class="hidden">
+      <header class="bar"><h1>Olho de Deus · PlacarUai</h1><span id="adminIdentity" class="muted"></span><button id="signOut">Sair</button></header>
+      <div class="filters">
+        <label>Período
+          <select id="period">
+            <option value="today">Hoje</option><option value="7d">Últimos 7 dias</option>
+            <option value="30d" selected>Últimos 30 dias</option><option value="month">Mês atual</option>
+            <option value="custom">Personalizado</option>
+          </select>
+        </label>
+        <label id="fromWrap" class="hidden">De <input id="fromDate" type="date"></label>
+        <label id="toWrap" class="hidden">Até <input id="toDate" type="date"></label>
+        <button id="refresh" class="primary">Atualizar</button>
+      </div>
+      <p id="dashboardError" class="error" role="status"></p>
+      <section id="overview"></section>
+      <nav class="tabs" aria-label="Módulos administrativos">
+        <button data-section="overview" aria-current="true">Visão geral</button>
+        <button data-section="users">Usuários</button>
+        <button data-section="subscriptions">Assinaturas</button>
+        <button data-section="tournaments">Campeonatos</button>
+        <button data-section="payments">Pagamentos</button>
+        <button data-section="monitoring">Monitoramento</button>
+        <button data-section="audit">Auditoria</button>
+      </nav>
+      <section id="sectionPanel" class="panel"></section>
+    </section>
+  </main>
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.118.0/dist/umd/supabase.js"></script>
+  <script src="./supabase-client-config.js"></script>
+  <script src="./admin-dashboard.js"></script>
+</body>
+</html>

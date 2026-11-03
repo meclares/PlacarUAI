@@ -1,0 +1,398 @@
+# 1. REGRA DEFINITIVA DA ASSINATURA MENSAL
+
+Implementar no PlacarUAI um sistema de assinatura mensal no valor de R$ 49,90, integrado ao Supabase.
+
+A assinatura concede ao usuário o direito de gerenciar quantos campeonatos desejar durante o período em que estiver ativa.
+
+Não deve existir limite de quantidade de campeonatos por mês.
+
+## Fluxo de funcionamento
+
+**SITUAÇÃO 1 — USUÁRIO COM ASSINATURA ATIVA**
+
+Usuário → Paga R$ 49,90 → Recebe autorização para gerenciar campeonatos → Gerencia quantos campeonatos quiser → Consulta o histórico dos campeonatos organizados.
+
+**SITUAÇÃO 2 — USUÁRIO COM ASSINATURA VENCIDA**
+
+Usuário → Não renova a assinatura → Perde a autorização para gerenciar campeonatos → Continua podendo visualizar o histórico dos campeonatos que organizou.
+
+**SITUAÇÃO 3 — USUÁRIO RENOVA A ASSINATURA**
+
+Usuário → Efetua a renovação → Pagamento é confirmado → A autorização para gerenciar campeonatos é restabelecida.
+
+### Regras obrigatórias
+
+- A criação de conta continua gratuita.
+- A consulta pública de campeonatos continua gratuita.
+- A consulta de estatísticas e classificações continua gratuita.
+- A visualização do histórico próprio continua gratuita.
+- A assinatura custa R$ 49,90 por mês.
+- O usuário pode gerenciar quantos campeonatos quiser enquanto sua assinatura estiver ativa.
+- A assinatura pertence ao usuário, e não a um campeonato específico.
+- Os campeonatos devem permanecer vinculados ao organizador que os criou.
+- O vencimento da assinatura não pode apagar campeonatos, resultados, classificações, pódios ou relatórios.
+- A renovação deve restabelecer as permissões de gerenciamento após a confirmação do pagamento.
+- Não permitir gerenciamento pago quando a assinatura estiver vencida, cancelada ou sem confirmação válida de pagamento, respeitando eventuais períodos de acesso já contratados.
+- A cobrança e as datas de vigência devem seguir o período efetivamente contratado e confirmado pelo provedor de pagamentos.
+
+## 2. GERENCIAMENTO DE ASSINATURAS NO SUPABASE
+
+Implemente um sistema centralizado para controlar a autorização de gerenciamento.
+
+Antes de criar novas tabelas, analise a estrutura atual do banco de dados.
+
+Reaproveite tabelas e relacionamentos existentes quando forem adequados.
+
+Caso necessário, implemente estruturas para armazenar:
+
+- Identificador do usuário.
+- Plano contratado.
+- Valor da assinatura.
+- Status da assinatura.
+- Data de início da vigência.
+- Data de vencimento.
+- Identificador da assinatura no provedor de pagamentos.
+- Histórico de pagamentos.
+- Data de cancelamento, quando aplicável.
+- Datas de confirmação e renovação.
+
+Utilize identificadores estáveis para relacionar os dados.
+
+Não utilize o nome ou o e-mail como identificador principal dos relacionamentos.
+
+### Autorização de gerenciamento
+
+O sistema deverá verificar a autorização do usuário antes de permitir operações como:
+
+- Criar campeonatos.
+- Editar campeonatos.
+- Gerenciar participantes e equipes.
+- Registrar ou alterar resultados.
+- Executar operações administrativas sobre campeonatos.
+
+A verificação deve ocorrer no backend e ser complementada por políticas RLS apropriadas no Supabase.
+
+Não basta esconder botões no frontend.
+
+Um usuário não poderá obter acesso pago simplesmente alterando o navegador, enviando uma requisição manual ou modificando informações locais.
+
+### Histórico independente da assinatura
+
+Os campeonatos devem possuir um vínculo persistente com o organizador.
+
+A autorização para gerenciar e a propriedade do histórico devem ser tratadas separadamente.
+
+Quando a assinatura vencer:
+
+1. Bloquear as operações de gerenciamento que exigem assinatura ativa.
+2. Preservar os campeonatos do organizador.
+3. Preservar os resultados e as estatísticas.
+4. Manter a consulta dos campeonatos concluídos.
+5. Manter os relatórios finais disponíveis para consulta.
+6. Exibir uma mensagem informando que a assinatura precisa ser renovada para voltar a gerenciar campeonatos.
+
+Não remover o vínculo entre o organizador e seus campeonatos.
+
+Não excluir registros por causa do vencimento da assinatura.
+
+---
+
+# 3. PÁGINA MASTER — OLHO DE DEUS
+
+Criar ou atualizar a Página Master do PlacarUAI, também chamada de "Olho de Deus".
+
+Essa página será o painel administrativo central do projeto, destinado exclusivamente ao administrador master autorizado.
+
+Seu objetivo é permitir uma visão ampla do funcionamento da plataforma, dos usuários, dos campeonatos, das assinaturas, dos pagamentos e das operações realizadas.
+
+**A Página Master não deve ser apenas uma página visual com números fictícios. Todas as informações devem ser obtidas de fontes reais do sistema.**
+
+Antes de implementar, analise se já existe um painel administrativo. Se existir, evolua o painel atual em vez de criar uma estrutura duplicada.
+
+## 3.1. Acesso exclusivo
+
+A Página Master deverá possuir uma rota administrativa própria, integrada à arquitetura existente.
+
+Somente usuários com uma permissão administrativa master explicitamente concedida poderão acessá-la.
+
+Não considere alguém administrador por possuir um e-mail específico, conhecer o endereço da página ou manipular o frontend.
+
+Implemente a autorização no backend e no Supabase.
+
+Requisitos:
+
+- Autenticação obrigatória.
+- Verificação de uma permissão administrativa específica.
+- Políticas RLS compatíveis com as funções administrativas.
+- Proteção de todas as consultas e operações administrativas.
+- Registro das ações administrativas relevantes.
+- Bloqueio de acesso para usuários comuns, mesmo que tentem abrir diretamente a rota.
+- Nenhuma credencial administrativa exposta no navegador.
+
+Não permita que um usuário comum conceda a si mesmo a função master.
+
+A concessão ou alteração dessa permissão deverá utilizar um procedimento administrativo seguro, fora do fluxo de cadastro público.
+
+Não é necessário expor a Página Master no menu dos usuários comuns.
+
+---
+
+# 4. DASHBOARD CENTRAL DA PÁGINA MASTER
+
+Ao entrar no Olho de Deus, o administrador deverá encontrar um dashboard com indicadores reais e atualizados.
+
+Organize as informações em módulos.
+
+## 4.1. Visão geral
+
+Exibir, conforme os dados disponíveis:
+
+- Total de usuários cadastrados.
+- Usuários ativos no período selecionado.
+- Novos cadastros.
+- Total de campeonatos criados.
+- Campeonatos em andamento.
+- Campeonatos concluídos.
+- Assinaturas ativas.
+- Assinaturas vencidas.
+- Assinaturas canceladas.
+- Pagamentos confirmados.
+- Pagamentos pendentes.
+- Pagamentos recusados, quando essa informação estiver disponível.
+- Receita efetivamente confirmada no período selecionado.
+
+Permitir selecionar períodos de consulta, como:
+
+- Hoje.
+- Últimos 7 dias.
+- Últimos 30 dias.
+- Mês atual.
+- Período personalizado.
+
+Apresentar os resultados com clareza e sem misturar valores estimados com valores efetivamente recebidos.
+
+## 4.2. Gestão de usuários
+
+Criar uma área para localizar e consultar usuários.
+
+Permitir pesquisar por:
+
+- Nome público.
+- E-mail, somente para administradores autorizados.
+- Identificador do usuário.
+- Status da conta.
+- Status da assinatura.
+
+Ao abrir um usuário, exibir os dados administrativos permitidos:
+
+- Identificação do usuário.
+- Data de cadastro.
+- Status da conta.
+- Situação da assinatura.
+- Histórico de pagamentos.
+- Quantidade de campeonatos organizados.
+- Campeonatos associados ao usuário.
+- Histórico de ações administrativas relevantes.
+
+As informações privadas devem ser acessíveis apenas quando forem necessárias para a finalidade administrativa e estiverem protegidas por permissões apropriadas.
+
+Não disponibilizar senhas, tokens de sessão ou credenciais privadas no painel.
+
+## 4.3. Gestão de assinaturas
+
+Criar um módulo para acompanhar as assinaturas do PlacarUAI.
+
+Exibir:
+
+- Usuário vinculado.
+- Plano contratado.
+- Valor mensal.
+- Status.
+- Data de início.
+- Data de vencimento.
+- Histórico de pagamentos.
+- Identificador externo da assinatura, quando aplicável.
+
+Permitir filtrar assinaturas ativas, vencidas, canceladas e pendentes.
+
+O painel deverá permitir investigar problemas de pagamento e identificar inconsistências.
+
+Alterações administrativas de assinatura deverão seguir regras de autorização e gerar registros de auditoria.
+
+Não criar uma assinatura ativa apenas porque o administrador abriu uma tela ou clicou em um botão sem confirmação adequada da operação.
+
+Se houver uma ferramenta para corrigir manualmente um estado administrativo, ela deverá exigir autorização explícita, registrar o motivo e manter um histórico da alteração.
+
+## 4.4. Gestão de campeonatos
+
+O administrador master deverá conseguir consultar os campeonatos existentes no sistema.
+
+Apresentar:
+
+- Nome do campeonato.
+- Identificador.
+- Organizador.
+- Status.
+- Data de criação.
+- Data de conclusão.
+- Quantidade de participantes.
+- Resultados disponíveis.
+- Situação de publicação.
+
+Permitir pesquisar e filtrar os campeonatos.
+
+Ao abrir um campeonato, apresentar seus dados, resultados, classificação, pódio e informações associadas.
+
+O painel master deverá facilitar a identificação de problemas, como:
+
+- Campeonato concluído sem classificação final.
+- Resultados inconsistentes.
+- Estatísticas desatualizadas.
+- Campeonatos sem vínculo correto com o organizador.
+- Informações públicas que não estejam sendo exibidas corretamente.
+
+Operações que alterem resultados oficiais deverão exigir autorização adequada, confirmação e registro de auditoria.
+
+Não permitir que uma correção administrativa apague silenciosamente o histórico anterior.
+
+## 4.5. Gestão financeira
+
+Criar uma visão financeira baseada nos registros reais do provedor de pagamentos e do banco de dados.
+
+Exibir, conforme as informações disponíveis:
+
+- Pagamentos confirmados.
+- Pagamentos pendentes.
+- Pagamentos recusados.
+- Renovações.
+- Cancelamentos.
+- Receita bruta confirmada.
+- Reembolsos confirmados, se houver.
+- Valores líquidos, somente quando as taxas e os demais componentes forem conhecidos.
+
+Não considerar pagamentos pendentes como receita recebida.
+
+Não calcular lucro líquido sem dados suficientes sobre taxas, custos e reembolsos.
+
+Permitir consultar o histórico de pagamentos e localizar a assinatura associada a cada transação.
+
+Nunca armazenar dados completos de cartões de pagamento no Supabase.
+
+## 4.6. Monitoramento e integridade
+
+Criar uma seção para acompanhar problemas técnicos e inconsistências relevantes.
+
+Sempre que houver dados disponíveis, apresentar:
+
+- Falhas de processamento de pagamentos.
+- Erros de atualização de campeonatos.
+- Falhas de sincronização de estatísticas.
+- Erros de geração de relatórios.
+- Problemas de autorização.
+- Operações administrativas recentes.
+- Registros que necessitem de revisão.
+
+Não mostrar informações técnicas sensíveis a usuários comuns.
+
+Evitar registrar senhas, tokens ou outros segredos em logs.
+
+O painel deverá diferenciar problemas identificados automaticamente de problemas confirmados manualmente.
+
+---
+
+# 5. AUDITORIA DAS AÇÕES ADMINISTRATIVAS
+
+A Página Master deverá possuir um histórico de auditoria para ações importantes.
+
+Registrar, conforme aplicável:
+
+- Identificador do administrador.
+- Tipo de ação.
+- Data e hora.
+- Registro afetado.
+- Motivo da alteração, quando necessário.
+- Resultado da operação.
+
+Priorizar o registro de operações como:
+
+- Alteração de permissões.
+- Ajustes administrativos em assinaturas.
+- Correções de dados de campeonatos.
+- Alterações de resultados oficiais.
+- Intervenções financeiras administrativas.
+
+Os registros de auditoria deverão ser protegidos contra alterações indevidas.
+
+Não permitir que um administrador comum apague ou modifique livremente o histórico das próprias ações.
+
+As consultas ao histórico deverão respeitar as permissões administrativas.
+
+---
+
+# 6. REGRAS DE SEGURANÇA DA PÁGINA MASTER
+
+A Página Master possui acesso privilegiado e deve ser tratada como uma área de alto risco.
+
+Implemente:
+
+1. Verificação de autorização no servidor.
+2. Políticas RLS específicas.
+3. Separação entre permissões de usuário comum e administrador.
+4. Validação dos dados antes de operações administrativas.
+5. Confirmação de ações destrutivas.
+6. Registro de auditoria.
+7. Tratamento seguro de sessões expiradas.
+8. Proteção contra alteração de permissões pelo próprio usuário.
+9. Nenhuma exposição da chave `service_role` no frontend.
+10. Respostas de erro que não revelem informações internas desnecessárias.
+
+Se for necessário utilizar uma função administrativa com privilégios elevados, ela deverá executar apenas as operações autorizadas e validar a identidade e a permissão de quem realizou a solicitação.
+
+Não conceda acesso irrestrito ao banco de dados apenas para facilitar a implementação do dashboard.
+
+---
+
+# 7. INTEGRAÇÃO E TESTES
+
+Antes de finalizar, validar os seguintes cenários:
+
+### Assinatura
+
+- Usuário sem assinatura não consegue gerenciar campeonatos pagos.
+- Usuário com pagamento confirmado consegue gerenciar campeonatos.
+- O usuário pode gerenciar vários campeonatos durante a vigência.
+- O vencimento bloqueia o gerenciamento pago.
+- O vencimento não apaga o histórico.
+- A renovação restabelece o acesso após a confirmação do pagamento.
+
+### Histórico
+
+- Os campeonatos permanecem vinculados ao organizador.
+- Os resultados continuam disponíveis.
+- Os relatórios finais continuam consultáveis.
+- Os usuários não conseguem visualizar dados privados de outros organizadores.
+
+### Página Master
+
+- Usuário comum não consegue acessar o painel.
+- Usuário autenticado sem permissão master não consegue executar consultas administrativas.
+- Administrador autorizado consegue visualizar os indicadores.
+- Os indicadores são calculados a partir de dados reais.
+- As informações financeiras correspondem aos registros confirmados.
+- As ações administrativas relevantes geram auditoria.
+- Operações administrativas não autorizadas são bloqueadas.
+
+### Relatório final
+
+Ao concluir a implementação, documentar:
+
+- Estruturas existentes que foram reaproveitadas.
+- Tabelas e migrações criadas ou alteradas.
+- Políticas RLS implementadas.
+- Mecanismo de autorização master.
+- Integração de pagamentos utilizada.
+- Testes efetivamente executados.
+- Problemas encontrados e corrigidos.
+- Configurações que dependem de intervenção manual.
+
+**Objetivo final:** ter um sistema de assinatura mensal confiável, gerenciamento ilimitado de campeonatos durante a vigência, histórico preservado após o vencimento e uma Página Master segura que permita acompanhar e administrar o funcionamento do PlacarUAI.
