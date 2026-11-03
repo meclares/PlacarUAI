@@ -211,7 +211,14 @@
       window.openAccount();
       return;
     }
-    var result = await client.functions.invoke('create-subscription', { body: {} });
+    var result;
+    try {
+      result = await client.functions.invoke('create-subscription', { body: {} });
+    } catch (error) {
+      console.error('Subscription checkout request failed', error);
+      report('Não foi possível iniciar a assinatura. Verifique a conexão e tente novamente.');
+      return;
+    }
     if (result.error) {
       console.error('Subscription checkout request failed', result.error);
       report('Não foi possível iniciar a assinatura. Tente novamente mais tarde.');
@@ -552,7 +559,14 @@
         var cancelPlan = dialog.querySelector('#cancelPlan');
         if (cancelPlan) cancelPlan.onclick = async function () {
           if (!window.confirm('Confirma o cancelamento da renovação automática? O acesso pago permanece até o fim do período vigente.')) return;
-          var result = await client.functions.invoke('cancel-subscription', { body: {} });
+          var result;
+          try {
+            result = await client.functions.invoke('cancel-subscription', { body: {} });
+          } catch (error) {
+            console.error('Subscription cancellation failed', error);
+            report('Não foi possível cancelar a renovação. Verifique a conexão e tente novamente.');
+            return;
+          }
           if (result.error) {
             console.error('Subscription cancellation failed', result.error);
             report('Não foi possível cancelar a renovação.');
@@ -866,6 +880,7 @@
         .limit(500);
       if (historyResult.error) {
         console.error('Unable to load private match history', historyResult.error.code);
+        report('Não foi possível carregar o histórico da nuvem. O histórico local pode não conter todas as partidas.');
       } else {
         var matchesById = new Map();
         window.ld(LKEY, []).filter(function (match) {
@@ -1072,8 +1087,13 @@
 
   function saveTours(list) {
     remoteTournaments = clone(list);
-    saveQueue = saveQueue.catch(function () {}).then(function () {
+    saveQueue = saveQueue.catch(function (error) {
+      console.error('Previous tournament save failed before retrying queued changes', error);
+    }).then(function () {
       return persistTournamentList(remoteTournaments);
+    }).catch(function (error) {
+      console.error('Tournament save failed unexpectedly', error);
+      report('Não foi possível salvar as alterações do campeonato. Verifique a conexão e tente novamente.');
     });
     return saveQueue;
   }
@@ -1113,10 +1133,17 @@
           report('A assinatura ativa é validada pelo servidor antes de alterar a publicação.');
           return;
         }
-        var result = await client.from('tournaments')
-          .update({ is_published: !tournament.is_published })
-          .eq('organizer_id', currentUser.id)
-          .eq('id', tournament.id);
+        var result;
+        try {
+          result = await client.from('tournaments')
+            .update({ is_published: !tournament.is_published })
+            .eq('organizer_id', currentUser.id)
+            .eq('id', tournament.id);
+        } catch (error) {
+          console.error('Tournament publication update failed', error);
+          report('Não foi possível alterar a publicação. Verifique a conexão e tente novamente.');
+          return;
+        }
         if (result.error) {
           console.error('Tournament publication update rejected', result.error.code);
           report('Não foi possível alterar a publicação.');

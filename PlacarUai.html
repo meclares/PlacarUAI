@@ -206,7 +206,7 @@ dialog input,dialog select{font:inherit;padding:11px;border-radius:12px;border:1
 @media(prefers-reduced-motion:reduce){.review-bubble{animation:none}}
 .tabs{position:relative;z-index:12;display:flex;align-items:center;justify-content:center;gap:18px;padding:8px 20px 13px;margin:0 auto;width:max-content;max-width:100%;background:#101411b8;border:1px solid #ffffff20;border-radius:28px 28px 0 0;backdrop-filter:blur(16px);box-shadow:0 -8px 30px #0005}
 .tabs button{position:relative;isolation:isolate;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:4px;width:70px;height:70px;min-height:70px;padding:9px 5px 7px;border:1px solid #ffffff45;border-radius:50%;overflow:visible;color:#f2f6ed;background:radial-gradient(ellipse at 28% 18%,#ffffff6b 0%,#ffffff17 17%,transparent 38%),radial-gradient(circle at 35% 25%,#7a9c7038,#242c27b8 57%,#111713e8 100%);box-shadow:inset 0 2px 5px #ffffff48,inset 0 -7px 13px #0008,0 8px 15px #0007;backdrop-filter:blur(9px);transition:transform .18s cubic-bezier(.2,.8,.3,1.4),box-shadow .2s,border-color .2s,color .2s;translate:0 0;animation:navOrbFloat 3.8s ease-in-out infinite}
-.tabs button:nth-child(2){animation-delay:-1.3s}.tabs button:nth-child(3){animation-delay:-2.5s}
+.tabs>[data-tab="history"]{animation-delay:-1.3s}.tabs>[data-tab="profile"]{animation-delay:-2.5s}
 .tabs button::before{content:"";position:absolute;z-index:-1;inset:4px 12px auto;height:15px;border-radius:50%;background:linear-gradient(180deg,#ffffff8a,#ffffff00);filter:blur(2px);pointer-events:none}
 .tabs button::after{content:"";position:absolute;inset:auto 14px 5px;height:9px;border-radius:50%;background:#ffffff18;filter:blur(4px);pointer-events:none}
 .tabs button svg{width:24px;height:24px;fill:none;stroke:currentColor;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round;filter:drop-shadow(0 1px 3px #0008)}
@@ -304,6 +304,15 @@ html:fullscreen body>#main{flex:1;width:100%;height:100%;min-height:0;padding:cl
 html:fullscreen body>#main #scoreFull{position:fixed;top:max(10px,env(safe-area-inset-top));right:max(10px,env(safe-area-inset-right));z-index:20;min-height:44px;padding:8px 14px;border:1px solid var(--line);border-radius:999px;background:color-mix(in srgb,var(--bar) 90%,transparent);color:var(--ink);box-shadow:0 4px 18px #0005}
 html:fullscreen body>#main #scoreFull span{position:static;width:auto;height:auto;overflow:visible;clip:auto}
 @media(orientation:landscape) and (max-height:520px){header{gap:6px;padding:4px 8px}header h1{font-size:22px}.seg button{min-height:32px;padding:4px 8px;font-size:12px}#main{gap:8px;padding:8px}.p{gap:7px;padding:10px}.p .s{font-size:clamp(64px,25vh,180px)}.tabs,footer{gap:4px;padding:4px}footer button{min-height:34px;padding:5px 9px}.p .big{min-height:42px}}
+.tabs{transition:padding .18s ease,gap .18s ease,width .18s ease}
+.tabs .tabs-toggle{display:grid;place-items:center;flex:none;width:44px;height:44px;min-height:44px;padding:0;border:1px solid color-mix(in srgb,var(--line) 84%,transparent);border-radius:50%;background:color-mix(in srgb,var(--card) 86%,transparent);color:var(--ink);box-shadow:0 3px 10px #0003;animation:none;transition:none;translate:0 0;transform:none}
+.tabs .tabs-toggle svg{width:20px;height:20px;fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+.tabs.is-collapsed{width:68px;gap:0;padding:4px 10px;border-radius:22px}
+.tabs.is-collapsed>[data-tab]{display:none}
+.tabs>[data-tab]{animation:navOrbFloat 3.8s ease-in-out infinite}
+@media(max-width:600px){.tabs:not(.is-collapsed){gap:8px;padding:7px 10px max(10px,env(safe-area-inset-bottom))}.tabs>[data-tab]{width:62px;height:62px;min-height:62px}.tabs>[data-tab][aria-current=true]{width:68px;height:68px;min-height:68px}.tabs .tabs-toggle{width:40px;height:40px;min-height:40px}}
+@media(orientation:landscape) and (max-height:520px){.tabs:not(.is-collapsed){gap:6px;padding:4px 8px}.tabs>[data-tab]{width:52px;height:52px;min-height:52px}.tabs>[data-tab][aria-current=true]{width:58px;height:58px;min-height:58px}.tabs .tabs-toggle{width:38px;height:38px;min-height:38px}}
+@media(prefers-reduced-motion:reduce){.tabs{transition:none}}
 </style>
 </head>
 <body>
@@ -326,7 +335,7 @@ html:fullscreen body>#main #scoreFull span{position:static;width:auto;height:aut
 <div id="st" class="hide" role="status"></div>
 <main id="main"></main>
 <section id="profile" aria-label="Perfil do atleta"></section>
-<nav class="tabs" aria-label="Navegação principal"><button data-tab="score" aria-current="true" aria-label="Início, Placar"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="4" width="18" height="16" rx="2"/><path d="M8 4v16M16 4v16M3 9h5m8 0h5M3 15h5m8 0h5"/></svg><span>Placar</span></button><button data-tab="history" aria-label="Histórico"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2M5.6 5.6 4 4"/></svg><span>Histórico</span></button><button data-tab="profile" aria-label="Perfil"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="8" r="4"/><path d="M4 21a8 8 0 0 1 16 0M18 4l1.5 1.5L22 3"/></svg><span>Perfil</span></button></nav>
+<nav id="appNavigation" class="tabs" aria-label="Navegação principal"><button id="tabsToggle" class="tabs-toggle" type="button" aria-controls="appNavigation" aria-expanded="true" aria-label="Ocultar menu de navegação" title="Ocultar menu"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="m6 9 6 6 6-6"/></svg></button><button data-tab="score" aria-current="true" aria-label="Início, Placar"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="4" width="18" height="16" rx="2"/><path d="M8 4v16M16 4v16M3 9h5m8 0h5M3 15h5m8 0h5"/></svg><span>Placar</span></button><button data-tab="history" aria-label="Histórico"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2M5.6 5.6 4 4"/></svg><span>Histórico</span></button><button data-tab="profile" aria-label="Perfil"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="8" r="4"/><path d="M4 21a8 8 0 0 1 16 0M18 4l1.5 1.5L22 3"/></svg><span>Perfil</span></button></nav>
 <footer>
   <button id="whistle" data-i="vol"><span>Apito</span></button>
   <button id="flip" data-i="swap"><span>Virar de quadra</span></button>
@@ -349,8 +358,8 @@ html:fullscreen body>#main #scoreFull span{position:static;width:auto;height:aut
 <script>
 var KEY='placaruai.v1',HKEY='placaruai.hist.v1';
 var PKEY='placaruai.profile.v1', AKEY='placaruai.account.v1', RKEY='placaruai.accounts.v1', LKEY='placaruai.athlete.matches.v1', FBKEY='placaruai.profile.feedback.v1', TKEY='placaruai.tournaments.v1';
-function ld(k,d){try{var v=localStorage.getItem(k);return v?JSON.parse(v):d}catch(e){return d}}
-function sv(k,v){try{localStorage.setItem(k,JSON.stringify(v))}catch(e){}}
+function ld(k,d){try{var v=localStorage.getItem(k);return v?JSON.parse(v):d}catch(e){console.error('Unable to read local app data',e);var status=document.getElementById('st');if(status){status.textContent='Não foi possível ler alguns dados salvos neste dispositivo.';status.classList.remove('hide')}return d}}
+function sv(k,v){try{localStorage.setItem(k,JSON.stringify(v));return true}catch(e){console.error('Unable to save local app data',e);var status=document.getElementById('st');if(status){status.textContent='Não foi possível salvar neste dispositivo. Verifique o espaço disponível e as permissões do navegador.';status.classList.remove('hide')}return false}}
 (function removeLegacyCredentials(){
   var accounts=ld(RKEY,[]),changed=false;
   if(Array.isArray(accounts))accounts.forEach(function(account){
@@ -957,6 +966,21 @@ function showAthleteHistory(){
 function activateAppTab(tab){activePane=tab;document.querySelectorAll('.tabs [data-tab]').forEach(function(button){button.setAttribute('aria-current',String(button.dataset.tab===tab))});document.getElementById('main').style.display=tab==='score'?'grid':'none';scoreFull.classList.toggle('hide',tab!=='score'||!document.fullscreenEnabled);var profile=document.getElementById('profile');profile.style.display=tab==='profile'?'block':'none';profile.classList.remove('social-only');document.getElementById('st').classList.toggle('hide',tab!=='score');if(tab==='profile')renderProfile();if(tab==='history')showAthleteHistory()}
 window.activateAuthenticatedTab=activateAppTab;
 document.querySelectorAll('.tabs [data-tab]').forEach(function(button){button.onclick=function(){var tab=button.dataset.tab;if(tab!=='score'&&(!window.placaruaiSocialApi||!window.placaruaiSocialApi.ready())){window.pendingAuthenticatedTab=tab;window.openAccount();return}activateAppTab(tab)}});
+var NAV_COLLAPSED_KEY='placaruai.navigation.collapsed.v1',navigation=document.getElementById('appNavigation'),navigationToggle=document.getElementById('tabsToggle'),landscapeQuery=window.matchMedia('(orientation: landscape) and (max-height: 520px)'),savedNavigationState=ld(NAV_COLLAPSED_KEY,null),navigationCollapsed=savedNavigationState===null?landscapeQuery.matches:savedNavigationState===true;
+function setNavigationCollapsed(collapsed,remember){
+ navigationCollapsed=collapsed;
+ navigation.classList.toggle('is-collapsed',collapsed);
+ navigationToggle.setAttribute('aria-expanded',String(!collapsed));
+ navigationToggle.setAttribute('aria-label',collapsed?'Mostrar menu de navegação':'Ocultar menu de navegação');
+ navigationToggle.title=collapsed?'Mostrar menu':'Ocultar menu';
+ navigationToggle.querySelector('path').setAttribute('d',collapsed?'m6 15 6-6 6 6':'m6 9 6 6 6-6');
+ if(remember)sv(NAV_COLLAPSED_KEY,collapsed);
+}
+setNavigationCollapsed(navigationCollapsed,false);
+navigationToggle.onclick=function(){setNavigationCollapsed(!navigationCollapsed,true)};
+function adaptNavigationToOrientation(event){if(ld(NAV_COLLAPSED_KEY,null)===null)setNavigationCollapsed(event.matches,false)}
+if(landscapeQuery.addEventListener)landscapeQuery.addEventListener('change',adaptNavigationToOrientation);
+else if(landscapeQuery.addListener)landscapeQuery.addListener(adaptNavigationToOrientation);
 // Substitui a finalização simples para acrescentar local e metadados pessoais sem afetar partidas anônimas.
 document.getElementById('end').onclick=function(){
  var a=S.A,b=S.B,scoreText=bt()?a.sets+' × '+b.sets+(S.hs.length?' ('+S.hs.join(', ')+')':''):a.pts+' × '+b.pts;open('<h2>Terminar partida?</h2><p>'+esc(personName(a.name))+' '+esc(scoreText)+' '+esc(personName(b.name))+'</p>'+(athleteAccount?'<label class="lb">Quadra ou local</label><input id="matchVenue" maxlength="70" placeholder="Nome da quadra" value="'+esc(athlete&&athlete.venue||'')+'"><label class="lb">Parceiro (opcional)</label><input id="matchPartner" maxlength="50" placeholder="Nome do parceiro">':'')+'<p class="hint">A partida será salva no histórico e o placar volta para 0.</p>','Terminar e salvar',function(){
