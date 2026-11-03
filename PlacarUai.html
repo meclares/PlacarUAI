@@ -73,6 +73,7 @@ header h1{display:flex;gap:8px;align-items:center}
 .account-field{display:grid;gap:6px;color:var(--mut);font-size:12px;font-weight:700}
 .account-control{width:100%;min-height:44px;padding:10px 12px;border:1px solid var(--line);border-radius:10px;background:var(--bg);color:var(--ink);font:500 14px Inter,system-ui,sans-serif}
 .account-control:focus-visible{outline:3px solid color-mix(in srgb,var(--blue) 35%,transparent);border-color:var(--blue)}
+.account-remember{display:flex;align-items:flex-start;gap:9px;color:var(--mut);font-size:12px;line-height:1.45;cursor:pointer}.account-remember input{width:17px;height:17px;flex:none;margin:1px 0 0;accent-color:var(--lime)}.account-remember small{display:block;margin-top:2px;color:var(--mut);font-size:11px}
 .account-dialog-actions{display:grid;gap:7px}
 .account-dialog-action{width:100%;min-height:44px;padding:10px 14px;border:1px solid var(--line);border-radius:10px;background:var(--bar);color:var(--ink);font-size:13px;font-weight:700}
 .account-dialog-action.primary{border-color:var(--blue);background:var(--blue);color:#fff}
@@ -319,6 +320,7 @@ dialog input,dialog select{background:var(--bg);color:var(--ink);border-color:va
 <div class="row"><button id="cx">Fechar</button></div></dialog>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.118.0/dist/umd/supabase.js"></script>
 <script src="./supabase-client-config.js"></script>
+<script src="./auth-storage.js"></script>
 <script>
 var KEY='placaruai.v1',HKEY='placaruai.hist.v1';
 var PKEY='placaruai.profile.v1', AKEY='placaruai.account.v1', RKEY='placaruai.accounts.v1', LKEY='placaruai.athlete.matches.v1', FBKEY='placaruai.profile.feedback.v1', TKEY='placaruai.tournaments.v1';

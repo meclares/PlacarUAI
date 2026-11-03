@@ -59,6 +59,9 @@
     .field-label{display:block;margin-bottom:4px;color:#e6ebe3;font-size:13px;font-weight:650}
     .field input{display:block;width:100%;min-height:42px;padding:8px 12px;border:1px solid #485649;border-radius:8px;background:#101812;color:#f4f6f1}
     .field input::placeholder{color:#839080}
+    .remember-session{display:flex;align-items:flex-start;gap:9px;margin:12px 0 2px;color:#d4ddd0;font-size:13px;cursor:pointer}
+    .remember-session input{width:17px;height:17px;flex:none;margin:1px 0 0;accent-color:#a6ff62}
+    .remember-session small{display:block;margin-top:2px;color:#aab5a8;font-size:11px}
     .password-wrap{position:relative;display:block}
     .password-wrap input{padding-right:76px}
     .reveal{position:absolute;top:4px;right:4px;min-height:38px;padding:5px 9px;border:0;border-radius:6px;background:transparent;color:#c5d0c0;font-size:12px;font-weight:700;cursor:pointer}
@@ -101,6 +104,7 @@
   </style>
   <script defer src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.118.0/dist/umd/supabase.js"></script>
   <script defer src="./supabase-client-config.js"></script>
+  <script defer src="./auth-storage.js"></script>
   <script defer src="./index-app.js"></script>
 </head>
 <body>
@@ -139,6 +143,10 @@
               <input id="password" name="password" type="password" autocomplete="current-password" minlength="8" required>
               <button id="toggle-password" class="reveal" type="button" aria-label="Mostrar senha" aria-pressed="false">Mostrar</button>
             </span>
+          </label>
+          <label class="remember-session" for="remember-session">
+            <input id="remember-session" name="remember-session" type="checkbox">
+            <span>Permanecer conectado neste dispositivo<small>Desative em aparelhos compartilhados.</small></span>
           </label>
           <div class="form-actions">
             <button id="submit-auth" class="action primary" type="submit">Entrar</button>

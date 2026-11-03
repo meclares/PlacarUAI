@@ -12,6 +12,24 @@
   var message = document.getElementById('dashboardError');
   var panel = document.getElementById('sectionPanel');
   var overview = document.getElementById('overview');
+  var rememberSessionInput = document.getElementById('remember-session');
+  var authStorage = window.placaruaiAuthStorage;
+  rememberSessionInput.checked = authStorage ? authStorage.isRemembered() : true;
+  rememberSessionInput.addEventListener('change', function () {
+    if (!authStorage) {
+      document.getElementById('loginError').textContent =
+        'A opção de permanência da sessão está indisponível. Recarregue a página.';
+      return;
+    }
+    try {
+      authStorage.setRemembered(rememberSessionInput.checked);
+    } catch (error) {
+      console.error('Unable to update session persistence', error);
+      rememberSessionInput.checked = authStorage.isRemembered();
+      document.getElementById('loginError').textContent =
+        'Não foi possível alterar a permanência da sessão neste dispositivo.';
+    }
+  });
 
   function escapeHtml(value) {
     return String(value == null ? '' : value).replace(/[&<>"']/g, function (char) {
@@ -338,10 +356,24 @@
     return;
   }
   client = window.supabase.createClient(config.url, config.publishableKey, {
-    auth: { persistSession: true, autoRefreshToken: true, detectSessionInUrl: true },
+    auth: {
+      persistSession: true,
+      autoRefreshToken: true,
+      detectSessionInUrl: true,
+      storage: authStorage && authStorage.storage,
+    },
   });
 
   document.getElementById('loginButton').onclick = async function () {
+    try {
+      if (!authStorage) throw new Error('Session persistence storage is unavailable');
+      authStorage.setRemembered(rememberSessionInput.checked);
+    } catch (error) {
+      console.error('Unable to apply session persistence before admin login', error);
+      document.getElementById('loginError').textContent =
+        'Não foi possível aplicar a permanência da sessão neste dispositivo.';
+      return;
+    }
     var result = await client.auth.signInWithPassword({
       email: document.getElementById('email').value.trim(),
       password: document.getElementById('password').value,

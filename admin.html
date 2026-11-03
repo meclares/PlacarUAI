@@ -25,6 +25,8 @@
     tr[data-user-id]{cursor:pointer}tr[data-user-id]:hover{background:#f4f7fa}
     .login{max-width:420px;margin:12vh auto}.login h1{margin-top:0}
     .login label{display:block;margin:12px 0 5px}.login input{width:100%;padding:10px;border:1px solid #ccd5de;border-radius:8px}
+    .login .remember-session{display:flex;align-items:flex-start;gap:9px;color:#5d6b7a;font-size:13px;cursor:pointer}
+    .login .remember-session input{width:17px;flex:none;margin:2px 0 0;accent-color:#1f6feb}
     .error{color:#a12727;min-height:1.5em}.success{color:#166534}
     .detail{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:10px}
     .detail p{margin:4px 0}.pager{display:flex;gap:8px;align-items:center;justify-content:flex-end;margin-top:10px}
@@ -38,6 +40,7 @@
       <p class="muted">Acesso administrativo autenticado. A permissão master é verificada no servidor.</p>
       <label for="email">E-mail</label><input id="email" type="email" autocomplete="username">
       <label for="password">Senha</label><input id="password" type="password" autocomplete="current-password">
+      <label class="remember-session" for="remember-session"><input id="remember-session" type="checkbox"><span>Permanecer conectado neste dispositivo</span></label>
       <p id="loginError" class="error" role="status"></p>
       <button id="loginButton" class="primary">Entrar</button>
     </section>
@@ -71,6 +74,7 @@
   </main>
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.118.0/dist/umd/supabase.js"></script>
   <script src="./supabase-client-config.js"></script>
+  <script src="./auth-storage.js"></script>
   <script src="./admin-dashboard.js"></script>
 </body>
 </html>

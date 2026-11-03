@@ -15,11 +15,28 @@
   var forgotButton = document.getElementById('forgot-password');
   var resendConfirmationButton = document.getElementById('resend-confirmation');
   var togglePasswordButton = document.getElementById('toggle-password');
+  var rememberSessionInput = document.getElementById('remember-session');
   var message = document.getElementById('auth-message');
   var accountState = document.getElementById('account-state');
   var client = null;
   var mode = 'signin';
   var recoveryFormShown = false;
+  var authStorage = window.placaruaiAuthStorage;
+  rememberSessionInput.checked = authStorage ? authStorage.isRemembered() : true;
+
+  rememberSessionInput.addEventListener('change', function () {
+    if (!authStorage) {
+      showMessage('A opção de permanência da sessão está indisponível. Recarregue a página.', true);
+      return;
+    }
+    try {
+      authStorage.setRemembered(rememberSessionInput.checked);
+    } catch (error) {
+      console.error('Unable to update session persistence', error);
+      rememberSessionInput.checked = authStorage.isRemembered();
+      showMessage('Não foi possível alterar a permanência da sessão neste dispositivo.', true);
+    }
+  });
 
   function showMessage(text, isError) {
     message.textContent = text;
@@ -216,6 +233,8 @@
     setBusy(true);
     showMessage(mode === 'signup' ? 'Criando sua conta...' : 'Entrando...', false);
     try {
+      if (!authStorage) throw new Error('Session persistence storage is unavailable');
+      authStorage.setRemembered(rememberSessionInput.checked);
       var result;
       if (mode === 'signup') {
         var signupOptions = { data: { display_name: displayNameInput.value.trim() } };
@@ -314,6 +333,8 @@
     googleButton.disabled = true;
     showMessage('Conectando com o Google...', false);
     try {
+      if (!authStorage) throw new Error('Session persistence storage is unavailable');
+      authStorage.setRemembered(rememberSessionInput.checked);
       var oauthOptions = {};
       var oauthRedirectUrl = authRedirectUrl('./PlacarUai.html');
       if (oauthRedirectUrl) oauthOptions.redirectTo = oauthRedirectUrl;
@@ -343,6 +364,7 @@
         persistSession: true,
         autoRefreshToken: true,
         detectSessionInUrl: true,
+        storage: authStorage && authStorage.storage,
       },
     });
     client.auth.onAuthStateChange(function (event, session) {

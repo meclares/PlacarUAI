@@ -560,7 +560,10 @@
       '<input id="authEmail" class="account-control" type="email" autocomplete="email" placeholder="voce@exemplo.com" required></label>' +
       '<label class="account-field" for="authPassword">Senha' +
       '<input id="authPassword" class="account-control" type="password" autocomplete="current-password" minlength="8" placeholder="Mínimo de 8 caracteres" required></label>' +
-      '</div><div class="account-dialog-actions">' +
+      '</div><label class="account-remember" for="authRememberSession">' +
+      '<input id="authRememberSession" type="checkbox">' +
+      '<span>Permanecer conectado neste dispositivo<small>Desative em aparelhos compartilhados.</small></span></label>' +
+      '<div class="account-dialog-actions">' +
       '<button id="authSubmit" class="account-dialog-action primary" type="button">Entrar</button>' +
       '<button id="authGoogle" class="account-dialog-action google" type="button">' +
       '<span class="google-mark" aria-hidden="true">G</span>Continuar com Google</button></div>' +
@@ -574,7 +577,25 @@
     var displayNameInput = dialog.querySelector('#authDisplayName');
     var emailInput = dialog.querySelector('#authEmail');
     var passwordInput = dialog.querySelector('#authPassword');
+    var rememberSessionInput = dialog.querySelector('#authRememberSession');
     var authSubmit = dialog.querySelector('#authSubmit');
+    var authStorage = window.placaruaiAuthStorage;
+    rememberSessionInput.checked = authStorage ? authStorage.isRemembered() : true;
+    rememberSessionInput.onchange = function () {
+      if (!authStorage) {
+        dialog.querySelector('#authError').textContent =
+          'A opção de permanência da sessão está indisponível. Recarregue a página.';
+        return;
+      }
+      try {
+        authStorage.setRemembered(rememberSessionInput.checked);
+      } catch (error) {
+        console.error('Unable to update session persistence', error);
+        rememberSessionInput.checked = authStorage.isRemembered();
+        dialog.querySelector('#authError').textContent =
+          'Não foi possível alterar a permanência da sessão neste dispositivo.';
+      }
+    };
     function setAuthMode(mode) {
       authMode = mode;
       var signingUp = mode === 'signup';
@@ -616,6 +637,8 @@
       errorElement.textContent = signingUp ? 'Criando sua conta...' : 'Entrando...';
       var result;
       try {
+        if (!authStorage) throw new Error('Session persistence storage is unavailable');
+        authStorage.setRemembered(rememberSessionInput.checked);
         result = signingUp
           ? await (function () {
             var options = { data: { display_name: displayNameInput.value.trim() } };
@@ -663,6 +686,8 @@
       button.disabled = true;
       errorElement.textContent = 'Conectando com o Google...';
       try {
+        if (!authStorage) throw new Error('Session persistence storage is unavailable');
+        authStorage.setRemembered(rememberSessionInput.checked);
         var oauthOptions = {};
         var oauthRedirectUrl = authRedirectUrl('./PlacarUai.html');
         if (oauthRedirectUrl) oauthOptions.redirectTo = oauthRedirectUrl;
@@ -1073,6 +1098,7 @@
         persistSession: true,
         autoRefreshToken: true,
         detectSessionInUrl: true,
+        storage: window.placaruaiAuthStorage && window.placaruaiAuthStorage.storage,
       },
     });
     window.placaruaiSupabaseClient = client;

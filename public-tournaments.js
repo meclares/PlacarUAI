@@ -217,7 +217,12 @@
       return;
     }
     client = window.supabase.createClient(config.url, config.publishableKey, {
-      auth: { persistSession: true, autoRefreshToken: true, detectSessionInUrl: true },
+      auth: {
+        persistSession: true,
+        autoRefreshToken: true,
+        detectSessionInUrl: true,
+        storage: window.placaruaiAuthStorage && window.placaruaiAuthStorage.storage,
+      },
     });
     var sessionResult = await client.auth.getSession();
     if (sessionResult.error) {
