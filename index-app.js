@@ -7,6 +7,11 @@
   var note = document.getElementById('auth-note');
   var displayNameField = document.getElementById('display-name-field');
   var displayNameInput = document.getElementById('display-name');
+  var signupProfileFields = document.getElementById('signup-profile-fields');
+  var signupPhoneInput = document.getElementById('signup-phone');
+  var signupCityInput = document.getElementById('signup-city');
+  var signupStateInput = document.getElementById('signup-state');
+  var signupSportInput = document.getElementById('signup-sport');
   var emailInput = document.getElementById('email');
   var passwordInput = document.getElementById('password');
   var submitButton = document.getElementById('submit-auth');
@@ -23,6 +28,10 @@
   var recoveryFormShown = false;
   var authStorage = window.placaruaiAuthStorage;
   rememberSessionInput.checked = authStorage ? authStorage.isRemembered() : true;
+  signupStateInput.innerHTML = '<option value="">Selecione</option>' +
+    window.PLACARUAI_BRAZIL_STATES.map(function (state) {
+      return '<option value="' + state[0] + '">' + state[1] + '</option>';
+    }).join('');
 
   rememberSessionInput.addEventListener('change', function () {
     if (!authStorage) {
@@ -73,13 +82,19 @@
     var signingUp = mode === 'signup';
     title.textContent = signingUp ? 'Crie sua conta grátis' : 'Entre na sua conta';
     note.textContent = signingUp
-      ? 'Seu cadastro é gratuito. Use pelo menos 8 caracteres na senha.'
+      ? 'Cadastro grátis. Complete seus dados para preencher o perfil; seu telefone permanece privado.'
       : 'Acesse seu perfil ou crie uma conta grátis.';
     submitButton.textContent = signingUp ? 'Criar conta gratuita' : 'Entrar';
+    googleButton.hidden = signingUp;
     toggleModeButton.textContent = signingUp ? 'Já tenho uma conta' : 'Criar conta gratuita';
     displayNameField.hidden = !signingUp;
     displayNameInput.required = signingUp;
     displayNameInput.autocomplete = signingUp ? 'name' : 'off';
+    signupProfileFields.hidden = !signingUp;
+    signupPhoneInput.required = signingUp;
+    signupCityInput.required = signingUp;
+    signupStateInput.required = signingUp;
+    signupSportInput.required = signingUp;
     forgotButton.hidden = signingUp;
     passwordInput.autocomplete = signingUp ? 'new-password' : 'current-password';
     passwordInput.minLength = 8;
@@ -237,7 +252,13 @@
       authStorage.setRemembered(rememberSessionInput.checked);
       var result;
       if (mode === 'signup') {
-        var signupOptions = { data: { display_name: displayNameInput.value.trim() } };
+        var signupOptions = { data: {
+          display_name: displayNameInput.value.trim(),
+          phone: signupPhoneInput.value.trim(),
+          city: signupCityInput.value.trim(),
+          state: signupStateInput.value,
+          favorite: signupSportInput.value,
+        } };
         var signupRedirectUrl = authRedirectUrl('./PlacarUai.html');
         if (signupRedirectUrl) signupOptions.emailRedirectTo = signupRedirectUrl;
         result = await client.auth.signUp({

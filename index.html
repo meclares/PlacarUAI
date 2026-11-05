@@ -20,6 +20,7 @@
   <link rel="canonical" href="./">
   <link rel="icon" href="./favicon.svg" type="image/svg+xml">
   <link rel="preload" as="image" href="./assets/hero-tennis.webp" fetchpriority="high">
+  <script defer src="./profile-registration.js"></script>
   <title>PlacarUAI | Placares, Campeonatos e Rankings Esportivos</title>
   <script type="application/ld+json">
     {
@@ -59,6 +60,10 @@
     .field-label{display:block;margin-bottom:4px;color:#e6ebe3;font-size:13px;font-weight:650}
     .field input{display:block;width:100%;min-height:42px;padding:8px 12px;border:1px solid #485649;border-radius:8px;background:#101812;color:#f4f6f1}
     .field input::placeholder{color:#839080}
+    .signup-profile-fields{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:0 12px}
+    .signup-profile-fields[hidden]{display:none}
+    .signup-profile-fields .field{min-width:0}
+    .signup-profile-fields .field select{display:block;width:100%;min-height:42px;padding:8px 10px;border:1px solid #485649;border-radius:8px;background:#101812;color:#f4f6f1}
     .remember-session{display:flex;align-items:flex-start;gap:9px;margin:12px 0 2px;color:#d4ddd0;font-size:13px;cursor:pointer}
     .remember-session input{width:17px;height:17px;flex:none;margin:1px 0 0;accent-color:#a6ff62}
     .remember-session small{display:block;margin-top:2px;color:#aab5a8;font-size:11px}
@@ -98,6 +103,7 @@
       .image-panel{position:relative;top:auto;grid-column:1;grid-row:3;align-self:stretch;width:auto;min-height:320px;height:42vh;height:42svh;max-height:430px}
       .image-caption{right:22px;bottom:22px;left:22px}
       .image-caption p{font-size:30px}
+      .signup-profile-fields{grid-template-columns:minmax(0,1fr)}
     }
     @media(max-width:370px){.topbar{gap:8px;padding-inline:12px}.brand{gap:6px;font-size:16px}.nav-link{padding-inline:9px}.content{padding-inline:12px}.auth-card{padding:14px}}
     @media(prefers-reduced-motion:reduce){*,*::before,*::after{scroll-behavior:auto!important;transition:none!important}}
@@ -129,10 +135,33 @@
         <h2 id="auth-title">Entre na sua conta</h2>
         <p id="auth-note" class="form-note">Acesse seu perfil ou crie uma conta grátis.</p>
         <form id="auth-form">
-          <label id="display-name-field" class="field" for="display-name" hidden>
-            <span class="field-label">Nome exibido</span>
-            <input id="display-name" name="display-name" type="text" autocomplete="name" maxlength="60">
-          </label>
+          <div id="signup-profile-fields" class="signup-profile-fields" hidden>
+            <label id="display-name-field" class="field" for="display-name">
+              <span class="field-label">Nome completo</span>
+              <input id="display-name" name="display-name" type="text" autocomplete="name" maxlength="60">
+            </label>
+            <label class="field" for="signup-phone">
+              <span class="field-label">Telefone (privado)</span>
+              <input id="signup-phone" name="phone" type="tel" autocomplete="tel" inputmode="tel" pattern="[0-9+() .-]{8,20}" maxlength="20" placeholder="(31) 99999-9999">
+            </label>
+            <label class="field" for="signup-city">
+              <span class="field-label">Cidade</span>
+              <input id="signup-city" name="city" type="text" autocomplete="address-level2" maxlength="60" placeholder="Sua cidade">
+            </label>
+            <label class="field" for="signup-state">
+              <span class="field-label">Estado</span>
+              <select id="signup-state" name="state" autocomplete="address-level1"></select>
+            </label>
+            <label class="field" for="signup-sport">
+              <span class="field-label">Modalidade que pratica</span>
+              <select id="signup-sport" name="favorite">
+                <option value="">Selecione</option>
+                <option value="volei">Vôlei</option>
+                <option value="futevolei">Futevôlei</option>
+                <option value="beach">Beach tennis</option>
+              </select>
+            </label>
+          </div>
           <label class="field" for="email">
             <span class="field-label">E-mail</span>
             <input id="email" name="email" type="email" autocomplete="email" placeholder="voce@exemplo.com" maxlength="254" required>

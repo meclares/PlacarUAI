@@ -36,6 +36,24 @@
       config.publishableKey.startsWith('sb_publishable_');
   }
 
+  function signupProfileFromMetadata(metadata) {
+    metadata = metadata && typeof metadata === 'object' ? metadata : {};
+    var profile = {};
+    var name = String(metadata.display_name || metadata.full_name || metadata.name || '').trim();
+    var phone = String(metadata.phone || '').trim();
+    var city = String(metadata.city || '').trim();
+    var state = String(metadata.state || '').trim().toUpperCase();
+    var favorite = String(metadata.favorite || '').trim();
+    if (name) profile.name = name;
+    if (/^[0-9+() .-]{8,20}$/.test(phone)) profile.phone = phone;
+    if (city) profile.city = city.slice(0, 60);
+    if (window.PLACARUAI_BRAZIL_STATES.some(function (item) { return item[0] === state; })) {
+      profile.state = state;
+    }
+    if (['volei', 'futevolei', 'beach'].indexOf(favorite) >= 0) profile.favorite = favorite;
+    return profile;
+  }
+
   function authRedirectUrl(path) {
     if (window.location.protocol !== 'http:' && window.location.protocol !== 'https:') {
       return null;
@@ -415,28 +433,6 @@
     window.renderProfile();
   }
 
-  function addImportControls() {
-    if (!currentUser) return;
-    var wrap = document.querySelector('#profile .profile-wrap');
-    if (!wrap || wrap.querySelector('#localDataExport')) return;
-    var controls = document.createElement('div');
-    controls.className = 'row';
-    controls.innerHTML =
-      '<button id="localDataExport">Exportar dados locais</button>' +
-      '<button id="localDataImport">Importar dados locais</button>' +
-      '<input id="localDataFile" type="file" accept="application/json,.json" class="hide">';
-    wrap.appendChild(controls);
-    controls.querySelector('#localDataExport').onclick = exportLocalData;
-    controls.querySelector('#localDataImport').onclick = function () {
-      controls.querySelector('#localDataFile').click();
-    };
-    controls.querySelector('#localDataFile').onchange = function () {
-      var file = this.files && this.files[0];
-      this.value = '';
-      importLocalData(file);
-    };
-  }
-
   function addPublicBrowseControl() {
     var wrap = document.querySelector('#profile .profile-wrap');
     if (!wrap || wrap.querySelector('#publicTournamentBrowse')) return;
@@ -610,6 +606,15 @@
       '<input id="authEmail" class="account-control" type="email" autocomplete="email" placeholder="voce@exemplo.com" required></label>' +
       '<label class="account-field" for="authPassword">Senha' +
       '<input id="authPassword" class="account-control" type="password" autocomplete="current-password" minlength="8" placeholder="Mínimo de 8 caracteres" required></label>' +
+      '</div><div id="authSignupProfileFields" class="account-signup-fields" hidden>' +
+      '<label class="account-field" for="authPhone">Telefone (privado)' +
+      '<input id="authPhone" class="account-control" type="tel" autocomplete="tel" inputmode="tel" pattern="[0-9+() .-]{8,20}" maxlength="20" placeholder="(31) 99999-9999"></label>' +
+      '<label class="account-field" for="authCity">Cidade' +
+      '<input id="authCity" class="account-control" type="text" autocomplete="address-level2" maxlength="60" placeholder="Sua cidade"></label>' +
+      '<label class="account-field" for="authState">Estado' +
+      '<select id="authState" class="account-control" autocomplete="address-level1"></select></label>' +
+      '<label class="account-field" for="authSport">Modalidade que pratica' +
+      '<select id="authSport" class="account-control"><option value="">Selecione</option><option value="volei">Vôlei</option><option value="futevolei">Futevôlei</option><option value="beach">Beach tennis</option></select></label>' +
       '</div><label class="account-remember" for="authRememberSession">' +
       '<input id="authRememberSession" type="checkbox">' +
       '<span>Permanecer conectado neste dispositivo<small>Desative em aparelhos compartilhados.</small></span></label>' +
@@ -625,6 +630,15 @@
     var authMode = 'signin';
     var displayNameField = dialog.querySelector('#authDisplayNameField');
     var displayNameInput = dialog.querySelector('#authDisplayName');
+    var signupProfileFields = dialog.querySelector('#authSignupProfileFields');
+    var phoneInput = dialog.querySelector('#authPhone');
+    var cityInput = dialog.querySelector('#authCity');
+    var stateInput = dialog.querySelector('#authState');
+    var sportInput = dialog.querySelector('#authSport');
+    stateInput.innerHTML = '<option value="">Selecione</option>' +
+      window.PLACARUAI_BRAZIL_STATES.map(function (state) {
+        return '<option value="' + state[0] + '">' + window.esc(state[1]) + '</option>';
+      }).join('');
     var emailInput = dialog.querySelector('#authEmail');
     var passwordInput = dialog.querySelector('#authPassword');
     var rememberSessionInput = dialog.querySelector('#authRememberSession');
@@ -651,12 +665,18 @@
       var signingUp = mode === 'signup';
       displayNameField.hidden = !signingUp;
       displayNameInput.required = signingUp;
+      signupProfileFields.hidden = !signingUp;
+      phoneInput.required = signingUp;
+      cityInput.required = signingUp;
+      stateInput.required = signingUp;
+      sportInput.required = signingUp;
       passwordInput.autocomplete = signingUp ? 'new-password' : 'current-password';
       authSubmit.textContent = signingUp ? 'Criar conta grátis' : 'Entrar';
+      dialog.querySelector('#authGoogle').hidden = signingUp;
       dialog.querySelector('#authForgot').hidden = signingUp;
       dialog.querySelector('#authTitle').textContent = signingUp ? 'Crie sua conta' : 'Acesse sua conta';
       dialog.querySelector('#authDescription').textContent = signingUp
-        ? 'É rápido e gratuito. Crie seu perfil para começar.'
+        ? 'Preencha seus dados esportivos para criar seu perfil automaticamente. Seu telefone é privado.'
         : 'Entre para acessar seu perfil e histórico.';
       dialog.querySelector('#authSignInMode').setAttribute('aria-pressed', String(!signingUp));
       dialog.querySelector('#authSignUpMode').setAttribute('aria-pressed', String(signingUp));
@@ -677,9 +697,11 @@
       var errorElement = dialog.querySelector('#authError');
       var signingUp = authMode === 'signup';
       if (!/^\S+@\S+\.\S+$/.test(email) || password.length < 8 ||
-        signingUp && !displayNameInput.value.trim()) {
+        signingUp && (!displayNameInput.value.trim() ||
+          !/^[0-9+() .-]{8,20}$/.test(phoneInput.value.trim()) ||
+          !cityInput.value.trim() || !stateInput.value || !sportInput.value)) {
         errorElement.textContent = signingUp
-          ? 'Informe seu nome, um e-mail válido e uma senha com pelo menos 8 caracteres.'
+          ? 'Informe nome, telefone válido, cidade, estado e modalidade, além de e-mail e senha com pelo menos 8 caracteres.'
           : 'Informe um e-mail válido e uma senha com pelo menos 8 caracteres.';
         return;
       }
@@ -691,7 +713,13 @@
         authStorage.setRemembered(rememberSessionInput.checked);
         result = signingUp
           ? await (function () {
-            var options = { data: { display_name: displayNameInput.value.trim() } };
+            var options = { data: {
+              display_name: displayNameInput.value.trim(),
+              phone: phoneInput.value.trim(),
+              city: cityInput.value.trim(),
+              state: stateInput.value,
+              favorite: sportInput.value,
+            } };
             var redirectUrl = authRedirectUrl('./PlacarUai.html');
             if (redirectUrl) options.emailRedirectTo = redirectUrl;
             return client.auth.signUp({ email: email, password: password, options: options });
@@ -830,11 +858,24 @@
       String(localProfile.ownerEmail).toLowerCase() === String(currentUser.email || '').toLowerCase()
     );
     var importedProfile = currentProfile && currentProfile.profile_data;
-    window.athlete = ownsLocalProfile
-      ? localProfile
+    var athleteProfile = ownsLocalProfile
+      ? clone(localProfile)
       : importedProfile && Object.keys(importedProfile).length
+      ? clone(importedProfile)
+      : {};
+    var registrationProfile = signupProfileFromMetadata(currentUser.user_metadata);
+    var sourceProfile = importedProfile && typeof importedProfile === 'object'
       ? importedProfile
-      : null;
+      : {};
+    ['name', 'phone', 'city', 'state', 'favorite'].forEach(function (key) {
+      if (!athleteProfile[key] && sourceProfile[key]) athleteProfile[key] = sourceProfile[key];
+      if (!athleteProfile[key] && registrationProfile[key]) athleteProfile[key] = registrationProfile[key];
+    });
+    athleteProfile.ownerEmail = currentUser.email || '';
+    window.athlete = Object.keys(athleteProfile).some(function (key) {
+      return key !== 'ownerEmail';
+    }) ? athleteProfile : null;
+    if (window.athlete && window.sv) window.sv(PKEY, window.athlete);
     window.athleteMatches = window.ld(LKEY, []).filter(function (match) {
       return !match.email ||
         String(match.email).toLowerCase() === String(currentUser.email || '').toLowerCase();
@@ -845,7 +886,6 @@
       uaId: currentProfile && currentProfile.public_id || '',
     };
     if (legacyRenderProfile) legacyRenderProfile();
-    addImportControls();
     addPublicBrowseControl();
     if (window.renderSocialProfile) window.renderSocialProfile();
   }
@@ -872,6 +912,43 @@
         report('Não foi possível carregar o perfil da conta.');
       } else {
         currentProfile = result.data;
+      }
+      if (currentProfile) {
+        var savedProfile = currentProfile.profile_data &&
+          typeof currentProfile.profile_data === 'object' &&
+          !Array.isArray(currentProfile.profile_data)
+          ? currentProfile.profile_data
+          : {};
+        var profileFromSignup = signupProfileFromMetadata(currentUser.user_metadata);
+        var hydratedProfile = clone(savedProfile);
+        var profileChanged = false;
+        Object.keys(profileFromSignup).forEach(function (key) {
+          if (!String(hydratedProfile[key] || '').trim()) {
+            hydratedProfile[key] = profileFromSignup[key];
+            profileChanged = true;
+          }
+        });
+        var displayName = currentProfile.display_name ||
+          profileFromSignup.name ||
+          savedProfile.name ||
+          '';
+        if (profileChanged || !currentProfile.display_name && displayName) {
+          var updateResult = await client.from('profiles')
+            .update({
+              display_name: String(displayName).slice(0, 80),
+              profile_data: hydratedProfile,
+            })
+            .eq('user_id', currentUser.id)
+            .select('user_id, public_id, email, display_name, account_status, profile_data')
+            .maybeSingle();
+          if (updateResult.error) {
+            console.error('Unable to save profile details collected during signup', updateResult.error.code);
+            report('Não foi possível salvar automaticamente os dados do cadastro no perfil. Você pode preenchê-los em Editar perfil.');
+            currentProfile.profile_data = hydratedProfile;
+          } else if (updateResult.data) {
+            currentProfile = updateResult.data;
+          }
+        }
       }
       var historyResult = await client.from('match_history')
         .select('id, match_data')
@@ -981,14 +1058,65 @@
       return socialRpc('search_athlete_profiles', { p_query: query, p_limit: 20 });
     },
     getProfile: function (publicId) {
-      return socialRpc('get_athlete_profile', { p_public_id: publicId });
+      return socialRpc('get_athlete_profile_social_v2', { p_public_id: publicId }).catch(function (error) {
+        if (!error || ['PGRST202', '42883'].indexOf(String(error.code || '')) < 0) throw error;
+        return socialRpc('get_athlete_profile', { p_public_id: publicId }).then(function (data) {
+          var profiles = Array.isArray(data) ? data : data ? [data] : [];
+          return profiles.map(function (profile) {
+            return Object.assign({}, profile, {
+              state_code: '',
+              following_count: Number(profile.craques_count) || 0,
+              followers_count: Number(profile.arquibancada_count) || 0,
+              win_percentage: null,
+              followers_hidden: false,
+            });
+          });
+        });
+      });
     },
     listConnections: function (publicId, relation) {
-      return socialRpc('list_athlete_connections', {
+      return socialRpc('list_athlete_connections_social_v2', {
         p_public_id: publicId,
         p_relation: relation,
         p_limit: 50,
+      }).catch(function (error) {
+        // The legacy RPC can safely provide the "following" list. Do not use
+        // it for followers: it predates the hidden-followers privacy setting.
+        if (relation !== 'following' || !error ||
+          ['PGRST202', '42883'].indexOf(String(error.code || '')) < 0) throw error;
+        return socialRpc('list_athlete_connections', {
+          p_public_id: publicId,
+          p_relation: 'craques',
+          p_limit: 50,
+        }).then(function (data) {
+          var people = Array.isArray(data) ? data : data ? [data] : [];
+          return people.map(function (person) {
+            return Object.assign({}, person, {
+              state_code: '',
+              win_percentage: null,
+            });
+          });
+        });
       });
+    },
+    getProfileReviews: function (publicId) {
+      return socialRpc('get_athlete_profile_reviews', { p_public_id: publicId });
+    },
+    submitProfileReview: function (publicId, rating, comment) {
+      return socialRpc('submit_athlete_profile_review', {
+        p_target_public_id: publicId,
+        p_rating: rating,
+        p_comment: comment,
+      });
+    },
+    moderateProfileReview: function (reviewId, action) {
+      return socialRpc('moderate_athlete_profile_review', {
+        p_review_id: reviewId,
+        p_action: action,
+      });
+    },
+    setProfileReviewsHidden: function (hidden) {
+      return socialRpc('set_athlete_profile_reviews_hidden', { p_hidden: hidden });
     },
     follow: function (publicId, following) {
       return socialRpc('set_athlete_follow', {

@@ -13,6 +13,24 @@
   var selectedTournamentId = null;
   var selectedTournamentIsDemo = false;
   var selectedTournamentSnapshot = '';
+  var tournamentQuery = '';
+  var tournamentFilter = 'all';
+  var toolbar = document.querySelector('.toolbar');
+  var searchInput = document.getElementById('tournamentSearch');
+
+  if (searchInput) searchInput.addEventListener('input', function () {
+    tournamentQuery = searchInput.value.trim().toLocaleLowerCase('pt-BR');
+    renderList();
+  });
+  document.querySelectorAll('[data-filter]').forEach(function (button) {
+    button.addEventListener('click', function () {
+      tournamentFilter = button.dataset.filter;
+      document.querySelectorAll('[data-filter]').forEach(function (filterButton) {
+        filterButton.setAttribute('aria-pressed', String(filterButton === button));
+      });
+      renderList();
+    });
+  });
 
   function team(id, name1, name2) {
     return { id: id, name1: name1, name2: name2 };
@@ -240,17 +258,22 @@
     selectedTournamentIsDemo = !!demo;
     selectedTournamentSnapshot = JSON.stringify(tournament);
     detailElement.replaceChildren();
-    var panel = node('section', null, 'panel');
+    var panel = node('section', null, 'section detail-panel');
     var back = node('button', '← Voltar aos campeonatos', 'back-button');
     back.type = 'button';
     back.onclick = function () {
       selectedTournamentId = null;
       selectedTournamentSnapshot = '';
       detailElement.replaceChildren();
+      listElement.hidden = false;
+      if (toolbar) toolbar.hidden = false;
       listElement.scrollIntoView({ behavior: 'smooth', block: 'start' });
     };
+    listElement.hidden = true;
+    if (toolbar) toolbar.hidden = true;
     panel.appendChild(back);
-    panel.appendChild(node('h2', tournament.name || 'Campeonato'));
+    panel.appendChild(node('span', demo ? 'EXEMPLO DE CAMPEONATO' : 'CAMPEONATO PUBLICADO', 'section-kicker'));
+    panel.appendChild(node('h2', tournament.name || 'Campeonato', 'detail-title'));
     if (demo) {
       panel.appendChild(node('p',
         'Demonstração: nomes, placares e estatísticas fictícios. As partidas reais serão exibidas aqui após serem concluídas e publicadas.',
@@ -260,7 +283,7 @@
       (tournament.sportName || 'Esporte não informado') + ' · ' +
       (tournament.stageLabel || tournament.stage || tournament.status || 'Status indisponível') +
       ' · ' + (tournament.teams || []).length + ' duplas',
-      'muted'));
+      'detail-subtitle'));
     var matches = allMatches(tournament).filter(function (match) {
       return match && match.winner && match.a && match.b;
     });
@@ -277,7 +300,7 @@
       stats.appendChild(card);
     });
 
-    var classification = node('div', null, 'scroll');
+    var classification = node('div', null, 'scroll data-block');
     classification.appendChild(node('h3', 'Classificação'));
     var table = node('table');
     var head = node('thead');
@@ -301,7 +324,7 @@
     classification.appendChild(table);
     panel.appendChild(classification);
 
-    var results = node('div', null, 'scroll');
+    var results = node('div', null, 'scroll data-block');
     results.appendChild(node('h3', 'Resultados'));
     var resultTable = node('table');
     var resultHead = node('thead');
@@ -329,55 +352,108 @@
     detailElement.appendChild(panel);
   }
 
+  function statusKey(row) {
+    var payload = row.payload || {};
+    var status = String(row.status || payload.stageLabel || payload.stage || '').toLowerCase();
+    if (status === 'completed' || status === 'done' || status === 'encerrado') return 'completed';
+    if (status === 'registration' || status.indexOf('inscri') >= 0) return 'registration';
+    if (status === 'in_progress' || status === 'groups' || status.indexOf('andamento') >= 0 || status.indexOf('fase') >= 0) return 'in_progress';
+    return 'all';
+  }
+
+  function matchesBrowseFilter(row) {
+    var payload = row.payload || {};
+    var searchText = [row.name, payload.sportName, payload.stageLabel].join(' ').toLocaleLowerCase('pt-BR');
+    if (tournamentQuery && searchText.indexOf(tournamentQuery) < 0) return false;
+    return tournamentFilter === 'all' || statusKey(row) === tournamentFilter;
+  }
+
   function renderTournamentButton(row, isDemo) {
     var button = node('button', null, 'item');
-    var description = node('span');
-    description.appendChild(node('strong', row.name));
-    var statusLabel = row.status === 'completed'
-      ? 'Encerrado'
-      : row.status === 'in_progress'
-      ? 'Em andamento'
-      : row.status === 'registration'
-      ? 'Inscrições abertas'
-      : row.status || 'Status indisponível';
-    description.appendChild(node('small',
-      (isDemo ? 'Exemplo fictício · ' + row.status : statusLabel) + ' · ' + row.participant_count +
-      ' duplas' + (isDemo ? '' : ' · ' + new Date(row.created_at).toLocaleDateString('pt-BR'))));
+    var description = node('span', null, 'item-copy');
+    description.appendChild(node('strong', row.name || 'Campeonato sem nome', 'item-title'));
+    var meta = node('span', null, 'item-meta');
+    var key = statusKey(row);
+    var label = key === 'completed' ? 'Encerrado'
+      : key === 'registration' ? 'Inscri\u00e7\u00f5es abertas'
+      : key === 'in_progress' ? 'Em andamento'
+      : row.status || 'Status indispon\u00edvel';
+    var badgeClass = key === 'completed' ? 'done' : key === 'registration' ? 'registration' : key === 'in_progress' ? 'live' : '';
+    meta.appendChild(node('span', isDemo ? 'Exemplo fict\u00edcio' : label, 'badge ' + badgeClass));
+    var teamCount = row.participant_count || row.payload && row.payload.teams && row.payload.teams.length || 0;
+    meta.appendChild(node('span', String(teamCount) + ' duplas'));
+    if (row.payload && row.payload.sportName) meta.appendChild(node('span', row.payload.sportName));
+    description.appendChild(meta);
     button.appendChild(description);
-    button.appendChild(node('span', isDemo ? 'Ver exemplo' : 'Consultar'));
+    var cta = node('span', null, 'item-cta');
+    cta.appendChild(node('span', isDemo ? 'Ver exemplo' : 'Ver campeonato'));
+    cta.appendChild(node('span', '\u203a', 'item-arrow'));
+    button.appendChild(cta);
     button.onclick = function () { renderDetail(row.payload, isDemo); };
     return button;
   }
 
   function renderList() {
     listElement.replaceChildren();
-    listElement.appendChild(node('h2', 'Campeonatos publicados'));
-    listElement.appendChild(node('p',
-      'Resultados publicados aparecem aqui quando as partidas são concluídas. A lista é atualizada automaticamente.',
-      'muted'));
+    var visibleTournaments = tournaments.filter(matchesBrowseFilter);
+    var visibleDemos = demoTournaments.filter(matchesBrowseFilter);
+    var liveSection = node('section', null, 'section');
+    liveSection.id = 'published';
+    var liveHead = node('div', null, 'section-head');
+    var liveTitle = node('div');
+    liveTitle.appendChild(node('span', 'PLACAR AO VIVO', 'section-kicker'));
+    liveTitle.appendChild(node('h2', 'Campeonatos publicados'));
+    liveTitle.appendChild(node('p', 'Resultados e classifica\u00e7\u00f5es compartilhados pelos organizadores.'));
+    liveHead.appendChild(liveTitle);
+    liveHead.appendChild(node('span', visibleTournaments.length + ' encontrados', 'section-count'));
+    liveSection.appendChild(liveHead);
     var liveList = node('div', null, 'list');
-    if (tournaments.length) {
-      tournaments.forEach(function (row) { liveList.appendChild(renderTournamentButton(row, false)); });
+    if (visibleTournaments.length) {
+      visibleTournaments.forEach(function (row, index) {
+        var card = renderTournamentButton(row, false);
+        card.style.animationDelay = Math.min(index * 45, 360) + 'ms';
+        liveList.appendChild(card);
+      });
     } else {
-      liveList.appendChild(node('p',
-        requiresAccount
-          ? 'Entre na sua conta para consultar os campeonatos reais publicados.'
-          : 'Nenhum campeonato real publicado no momento.',
-        'muted'));
-      if (requiresAccount) {
-        var accountLink = node('a', 'Entrar ou criar uma conta', 'account-link');
+      var emptyMessage = tournamentQuery || tournamentFilter !== 'all'
+        ? 'Nenhum campeonato corresponde a essa busca ou filtro.'
+        : requiresAccount
+        ? 'Entre na sua conta para consultar campeonatos reais publicados.'
+        : 'Ainda n\u00e3o h\u00e1 campeonatos publicados. Confira os exemplos enquanto isso.';
+      var empty = node('div', emptyMessage, 'empty');
+      if (requiresAccount && !tournamentQuery && tournamentFilter === 'all') {
+        var accountLink = node('a', 'Entrar ou criar conta', 'account-link');
         accountLink.href = './PlacarUai.html?auth=required';
-        liveList.appendChild(accountLink);
+        empty.appendChild(document.createElement('br'));
+        empty.appendChild(accountLink);
       }
+      liveList.appendChild(empty);
     }
-    listElement.appendChild(liveList);
-    listElement.appendChild(node('h2', 'Conheça o funcionamento'));
-    listElement.appendChild(node('p',
-      'Explore quatro exemplos com estatísticas fictícias. Eles não são resultados reais.',
-      'muted'));
+    liveSection.appendChild(liveList);
+    listElement.appendChild(liveSection);
+
+    var demoSection = node('section', null, 'section demo-section');
+    var demoHead = node('div', null, 'section-head');
+    var demoTitle = node('div');
+    demoTitle.appendChild(node('span', 'APRENDA EXPLORANDO', 'section-kicker'));
+    demoTitle.appendChild(node('h2', 'Conhe\u00e7a o formato'));
+    demoTitle.appendChild(node('p', 'Abra um exemplo para ver classifica\u00e7\u00e3o e resultados.'));
+    demoHead.appendChild(demoTitle);
+    demoHead.appendChild(node('span', visibleDemos.length + ' exemplos', 'section-count'));
+    demoSection.appendChild(demoHead);
+    demoSection.appendChild(node('p', 'Os nomes, placares e estat\u00edsticas abaixo s\u00e3o fict\u00edcios e servem apenas para demonstrar a p\u00e1gina.', 'demo-disclaimer'));
     var examples = node('div', null, 'list');
-    demoTournaments.forEach(function (row) { examples.appendChild(renderTournamentButton(row, true)); });
-    listElement.appendChild(examples);
+    if (visibleDemos.length) {
+      visibleDemos.forEach(function (row, index) {
+        var card = renderTournamentButton(row, true);
+        card.style.animationDelay = Math.min(index * 45, 360) + 'ms';
+        examples.appendChild(card);
+      });
+    } else {
+      examples.appendChild(node('div', 'Nenhum exemplo combina com essa busca ou filtro.', 'empty'));
+    }
+    demoSection.appendChild(examples);
+    listElement.appendChild(demoSection);
   }
 
   async function refreshPublicTournaments() {

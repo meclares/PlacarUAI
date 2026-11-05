@@ -16,14 +16,16 @@ A migracao `migrations/20261101120000_subscriptions_and_master.sql` cria:
 
 A migracao `migrations/20261102210000_social_profiles_and_activity.sql` acrescenta:
 
-- `athlete_follows`: relacoes entre atletas, sem permitir entrar na propria Arquibancada ou duplicar acompanhamentos.
+- `athlete_follows`: relacoes de seguindo/seguidores entre atletas, sem permitir seguir a si mesmo ou duplicar acompanhamentos.
 - `social_matches` e `social_match_participants`: partidas compartilhadas e aceite individual dos participantes.
-- `social_notifications`: avisos de entrada na Arquibancada, convite de partida e atividade concluida.
-- RPCs para buscar perfis, consultar apenas os campos publicos, acompanhar atletas, responder a convites e abrir o feed da Arquibancada. As tabelas sociais nao permitem leitura ou escrita direta por `anon`/`authenticated`; as RPCs de perfis e conexoes exigem uma conta autenticada e limitam os dados devolvidos.
+- `social_notifications`: avisos de novos seguidores, convites de partida e atividades concluidas.
+- RPCs para buscar perfis, consultar apenas os campos publicos, seguir atletas, responder a convites e abrir o feed de quem o usuario segue. As tabelas sociais nao permitem leitura ou escrita direta por `anon`/`authenticated`; as RPCs de perfis e conexoes exigem uma conta autenticada e limitam os dados devolvidos.
 
-A migracao `migrations/20261103000000_social_tournament_feed.sql` cria indices de busca por ID/nome e inclui no feed da Arquibancada os campeonatos concluidos e publicados pelos atletas acompanhados.
+A migracao `migrations/20261103000000_social_tournament_feed.sql` cria indices de busca por ID/nome e inclui no feed social os campeonatos concluidos e publicados pelos atletas seguidos.
 
 A migracao `migrations/20261103024500_authenticated_app_access.sql` restringe a busca/consulta de perfis, conexoes sociais e consulta de campeonatos publicados a sessoes autenticadas. Somente o placar pode ser usado sem conta; o historico, perfil, recursos sociais e campeonatos exigem login.
+
+A migracao `migrations/20261104000000_social_followers_privacy.sql` mantem `athlete_follows` como relacao social, mas atualiza a interface para **Seguindo** e **Seguidores**. As novas RPCs devolvem UF e aproveitamento para cada atleta nas listas e respeitam `profile_data.hideFollowers`: outros usuarios veem a contagem, mas nao recebem a lista quando o atleta ocultou seus seguidores. O titular ainda pode consultar a propria lista. A opcao de privacidade e salva junto ao perfil.
 
 ## Cadastro seguro e e-mails
 

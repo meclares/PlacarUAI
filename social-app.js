@@ -12,7 +12,7 @@
   function followButton(publicId, following) {
     return '<button type="button" class="social-follow-button" data-follow-id="' +
       esc(publicId) + '" data-following="' + String(following) + '" aria-pressed="' +
-      String(following) + '">' + (following ? 'Na arquibancada' : 'Arquibancada') + '</button>';
+      String(following) + '">' + (following ? 'Seguindo' : 'Seguir') + '</button>';
   }
 
   function rows(value) {
@@ -23,6 +23,20 @@
     return '<span class="social-avatar">' +
       (photo ? '<img src="' + esc(photo) + '" alt="" loading="lazy" referrerpolicy="no-referrer">' : esc(String(name || 'A').slice(0, 1).toUpperCase())) +
       '</span>';
+  }
+
+  function stateBadge(code) {
+    if (!code || typeof window.stateFlagMarkup !== 'function') return '';
+    return '<div class="social-state-badge">' + window.stateFlagMarkup(code) + '</div>';
+  }
+
+  function connectionDetails(person) {
+    var sports = Array.isArray(person.sports) && person.sports.length
+      ? person.sports.join(', ')
+      : 'Modalidade não informada';
+    return '<div class="social-connection-meta">' + stateBadge(person.state_code) +
+      '<span>' + esc(sports) + '</span><b>Aproveitamento ' +
+      esc(Number(person.win_percentage) || 0) + '%</b></div>';
   }
 
   function reportError(container, message) {
@@ -129,6 +143,7 @@
   }
 
   function renderSocialProfile() {
+    var searchSequence = 0;
     var host = document.getElementById('profile');
     if (!host) return;
     var oldRoot = host.querySelector('#socialRoot');
@@ -138,32 +153,130 @@
     var root = document.createElement('section');
     root.id = 'socialRoot';
     root.className = 'social-root';
-    host.appendChild(root);
+    var athleteIdCard = host.querySelector('.profile-public-id');
+    if (athleteIdCard) athleteIdCard.insertAdjacentElement('afterend', root);
+    else host.appendChild(root);
 
     var ownPublicId = api.publicId();
+    var profileCache = Object.create(null);
     if (!ownPublicId) {
       root.innerHTML = '<p class="social-muted">Seu perfil ainda está sendo carregado. Atualize a página em instantes.</p>';
       return;
     }
 
     root.innerHTML =
-      '<div class="social-heading"><div><h2>Craques e Arquibancada</h2>' +
-      '<p>Encontre atletas, acompanhe partidas e veja quem acompanha você.</p></div></div>' +
+      '<div class="social-heading"><div><h2>Seguindo e seguidores</h2>' +
+      '<p>Encontre atletas pelo nome ou ID UA, siga perfis e acompanhe as atividades deles.</p></div></div>' +
       '<div id="socialError"></div>' +
       '<div class="social-counts" aria-label="Resumo social">' +
       '<div class="social-count"><b id="socialGames">—</b><span>Jogos</span></div>' +
-      '<button class="social-count" data-relation="craques"><b id="socialCraques">—</b><span>Craques</span></button>' +
-      '<button class="social-count" data-relation="arquibancada"><b id="socialAudience">—</b><span>Arquibancada</span></button></div>' +
+      '<button class="social-count" data-relation="following"><b id="socialFollowing">—</b><span>Seguindo</span></button>' +
+      '<button class="social-count" data-relation="followers"><b id="socialFollowers">—</b><span>Seguidores</span></button></div>' +
       '<div class="social-nav" role="group" aria-label="Recursos sociais">' +
-      '<button type="button" data-panel="feed" aria-pressed="' + String(activeSocialPanel === 'feed') + '">Jogos da arquibancada</button>' +
+      '<button type="button" data-panel="feed" aria-pressed="' + String(activeSocialPanel === 'feed') + '">Atividades de quem você segue</button>' +
       '<button type="button" data-panel="notifications" aria-pressed="' + String(activeSocialPanel === 'notifications') + '">Notificações <span id="socialNotificationCount"></span></button>' +
       '</div>' +
-      '<form class="social-search" id="socialSearch"><input id="socialQuery" type="search" maxlength="80" placeholder="Buscar por nome ou ID do atleta" aria-label="Buscar atleta por nome ou ID">' +
-      '<button type="submit" class="go">Buscar atletas</button></form><div id="socialSearchResults" class="social-list"></div>' +
+      '<section class="social-discovery" aria-labelledby="socialSearchTitle"><div class="social-discovery-head"><div><h3 id="socialSearchTitle">Encontrar atletas</h3>' +
+      '<p>Digite o nome ou o ID UA completo ou parcial.</p></div></div>' +
+      '<form class="social-search" id="socialSearch"><label class="social-search-label" for="socialQuery">Nome ou ID do atleta</label><div class="social-search-controls"><input id="socialQuery" type="search" maxlength="80" autocomplete="off" enterkeyhint="search" placeholder="Ex.: Ana Silva ou UA-AB12CD34" aria-label="Buscar atleta por nome ou ID UA">' +
+      '<button type="submit" class="go">Buscar</button><button type="button" data-action="clear-search" aria-label="Limpar busca">Limpar</button></div></form>' +
+      '<div id="socialSearchResults" class="social-list" aria-live="polite"><p class="social-search-hint">Os resultados e a opção de seguir aparecerão aqui.</p></div></section>' +
       '<div id="socialDetails" class="social-panel" hidden></div>' +
       '<div id="socialConnections" class="social-list" hidden></div>' +
-      '<section id="socialFeed" class="social-panel"' + (activeSocialPanel === 'feed' ? '' : ' hidden') + '><h3>Jogos da arquibancada</h3><div class="social-list" id="socialFeedList"><p class="social-muted">Carregando partidas...</p></div></section>' +
+      '<dialog id="socialPopup" class="social-popup" aria-label="Seguindo e seguidores"></dialog>' +
+      '<section id="socialFeed" class="social-panel"' + (activeSocialPanel === 'feed' ? '' : ' hidden') + '><h3>Atividades de quem você segue</h3><div class="social-list" id="socialFeedList"><p class="social-muted">Carregando partidas...</p></div></section>' +
       '<section id="socialNotifications" class="social-panel"' + (activeSocialPanel === 'notifications' ? '' : ' hidden') + '><div class="social-heading"><div><h3>Notificações</h3></div><button type="button" data-action="mark-read">Marcar como lidas</button></div><div class="social-list" id="socialNotificationList"></div></section>';
+
+    function showPopup(title, content) {
+      var dialog = root.querySelector('#socialPopup');
+      dialog.innerHTML = '<div class="social-popup-head"><h3>' + esc(title) +
+        '</h3><button type="button" class="social-popup-close" data-action="close-popup" aria-label="Fechar">×</button></div>' +
+        '<div class="social-popup-body">' + content + '</div>';
+      dialog.onclick = function (event) { if (event.target === dialog) dialog.close(); };
+      if (!dialog.open) dialog.showModal();
+      return dialog;
+    }
+
+    function writeCount(selector, value) {
+      var node = document.querySelector(selector);
+      if (node) node.textContent = String(Math.max(0, Number(value) || 0));
+    }
+
+    function refreshMyCounts() {
+      api.getProfile(ownPublicId).then(function (data) {
+        var profile = rows(data)[0];
+        if (!profile) return;
+        writeCount('#socialFollowing', profile.following_count);
+        writeCount('#socialFollowers', profile.followers_count);
+        writeCount('#profileSocialFollowing', profile.following_count);
+        writeCount('#profileSocialFollowers', profile.followers_count);
+      }).catch(function (error) {
+        console.error('Unable to refresh social connection counts', error);
+      });
+    }
+
+    function setFollowButtons(publicId, following) {
+      root.querySelectorAll('[data-follow-id]').forEach(function (button) {
+        if (button.dataset.followId !== publicId) return;
+        button.dataset.following = String(following);
+        button.setAttribute('aria-pressed', String(following));
+        button.textContent = following ? 'Seguindo' : 'Seguir';
+        button.disabled = false;
+      });
+    }
+
+    function cacheProfiles(people) {
+      rows(people).forEach(function (person) {
+        if (person && person.public_id) profileCache[person.public_id] = person;
+      });
+    }
+
+    function openFollowConfirmation(profile, isFollowing, sourceButton) {
+      showPopup(isFollowing ? 'Deixar de seguir?' : 'Confirmar para seguir',
+        '<article class="social-confirm-card">' + avatar(profile.photo_url, profile.display_name) +
+        '<div class="social-confirm-info"><b>' + esc(profile.display_name) + '</b><small>ID ' +
+        esc(profile.public_id) + '</small></div></article><p data-follow-error class="social-error" role="status"></p>' +
+        '<div class="social-popup-actions"><button type="button" data-action="close-popup">Cancelar</button>' +
+        '<button type="button" class="go" data-follow-confirm="' + esc(profile.public_id) +
+        '" data-following="' + String(isFollowing) + '">' + (isFollowing ? 'Deixar de seguir' : 'Seguir') + '</button></div>');
+      if (sourceButton) sourceButton.disabled = false;
+    }
+
+    function confirmFollow(publicId, following, button) {
+      var dialog = root.querySelector('#socialPopup');
+      button.disabled = true;
+      api.follow(publicId, following).then(function () {
+        var delta = following ? 1 : -1;
+        var followingCount = root.querySelector('#socialFollowing');
+        if (followingCount && /^\d+$/.test(followingCount.textContent.trim())) {
+          var current = Number(followingCount.textContent);
+          writeCount('#socialFollowing', current + delta);
+          writeCount('#profileSocialFollowing', current + delta);
+        }
+        root.querySelectorAll('[data-connection-relation="following"]').forEach(function (count) {
+          if (count.dataset.profileId !== publicId) return;
+          var total = Number(count.querySelector('b').textContent) || 0;
+          count.querySelector('b').textContent = String(Math.max(0, total + delta));
+        });
+        setFollowButtons(publicId, following);
+        refreshMyCounts();
+        api.getProfile(publicId).then(function (data) {
+          var target = rows(data)[0];
+          if (!target) return;
+          root.querySelectorAll('[data-connection-relation="followers"]').forEach(function (count) {
+            if (count.dataset.profileId === publicId) count.querySelector('b').textContent = String(target.followers_count);
+          });
+        }).catch(function (error) { console.error('Unable to refresh followed athlete counts', error); });
+        showPopup(following ? 'Agora você está seguindo' : 'Você deixou de seguir',
+          '<p class="social-muted">' + (following ? 'O atleta foi adicionado à sua lista de Seguindo.' : 'O atleta foi removido da sua lista de Seguindo.') + '</p>' + (following ? '<div class="social-popup-actions"><button type="button" class="go" data-profile-id="' + esc(publicId) + '">Abrir perfil e comentar</button></div>' : ''));
+      }).catch(function (error) {
+        console.error('Unable to update athlete follow', error);
+        button.disabled = false;
+        var message = dialog.querySelector('[data-follow-error]');
+        if (message) message.textContent = 'Não foi possível atualizar agora. Tente novamente.';
+        else reportError(root, 'Não foi possível atualizar o acompanhamento. Tente novamente.');
+      });
+    }
 
     root.addEventListener('click', function (event) {
       var button = event.target.closest('button');
@@ -181,6 +294,26 @@
         loadConnections(ownPublicId, button.dataset.relation);
         return;
       }
+      if (button.dataset.action === 'close-popup') {
+        root.querySelector('#socialPopup').close();
+        return;
+      }
+      if (button.dataset.action === 'clear-search') {
+        searchSequence++;
+        root.querySelector('#socialQuery').value = '';
+        var clearedResults = root.querySelector('#socialSearchResults');
+        clearedResults.removeAttribute('aria-busy');
+        clearedResults.innerHTML = '<p class="social-search-hint">Os resultados e a opção de seguir aparecerão aqui.</p>';
+        var clearSubmit = root.querySelector('#socialSearch button[type="submit"]');
+        clearSubmit.disabled = false;
+        clearSubmit.textContent = 'Buscar';
+        root.querySelector('#socialQuery').focus();
+        return;
+      }
+      if (button.dataset.followConfirm) {
+        confirmFollow(button.dataset.followConfirm, button.dataset.following !== 'true', button);
+        return;
+      }
       if (button.dataset.action === 'mark-read') {
         api.markNotificationsRead().then(renderSocialProfile).catch(function (error) {
           console.error('Unable to mark social notifications as read', error);
@@ -189,8 +322,7 @@
         return;
       }
       if (button.dataset.action === 'back-profile') {
-        root.querySelector('#socialDetails').hidden = true;
-        root.querySelector('#socialConnections').hidden = true;
+        root.querySelector('#socialPopup').close();
         return;
       }
       if (button.dataset.connectionRelation) {
@@ -202,14 +334,24 @@
         return;
       }
       if (button.dataset.followId) {
-        if (button.dataset.following === 'true' &&
-          !window.confirm('Sair da arquibancada?')) return;
-        api.follow(button.dataset.followId, button.dataset.following !== 'true')
-          .then(renderSocialProfile)
-          .catch(function (error) {
-            console.error('Unable to update athlete follow', error);
-            reportError(root, 'Não foi possível atualizar o acompanhamento. Tente novamente.');
-          });
+        var publicId = button.dataset.followId;
+        var isFollowing = button.dataset.following === 'true';
+        var cachedProfile = profileCache[publicId];
+        if (cachedProfile) {
+          openFollowConfirmation(cachedProfile, isFollowing, button);
+          return;
+        }
+        button.disabled = true;
+        api.getProfile(publicId).then(function (data) {
+          var profile = rows(data)[0];
+          if (!profile) throw new Error('Athlete profile is unavailable');
+          cacheProfiles(profile);
+          openFollowConfirmation(profile, isFollowing, button);
+        }).catch(function (error) {
+          console.error('Unable to load athlete before confirming follow', error);
+          button.disabled = false;
+          reportError(root, 'Não foi possível carregar o perfil do atleta. Tente novamente.');
+        });
         return;
       }
       if (button.dataset.matchId && button.dataset.decision) {
@@ -227,15 +369,26 @@
     root.querySelector('#socialSearch').onsubmit = function (event) {
       event.preventDefault();
       var query = root.querySelector('#socialQuery').value.trim();
-      if (!query) return;
+      if (!query) {
+        root.querySelector('#socialQuery').focus();
+        return;
+      }
+      var requestId = ++searchSequence;
       var resultBox = root.querySelector('#socialSearchResults');
+      var submitButton = root.querySelector('#socialSearch button[type="submit"]');
+      resultBox.setAttribute('aria-busy', 'true');
       resultBox.innerHTML = '<p class="social-muted">Buscando atletas...</p>';
+      submitButton.disabled = true;
+      submitButton.textContent = 'Buscando…';
       api.searchProfiles(query).then(function (data) {
+        if (requestId !== searchSequence) return;
         var people = rows(data).filter(function (person) {
           return person.public_id !== ownPublicId;
         });
+        cacheProfiles(people);
         resultBox.innerHTML = people.length
-          ? people.map(function (person) {
+          ? '<p class="social-search-result-count">' + people.length + (people.length === 1 ? ' atleta encontrado' : ' atletas encontrados') + '</p>' +
+            people.map(function (person) {
             return '<article class="social-person">' + avatar(person.photo_url, person.display_name) +
               '<div class="social-person-info"><b>' + esc(person.display_name) + '</b><small>' +
               esc(person.public_id) + (person.city ? ' · ' + esc(person.city) : '') +
@@ -246,10 +399,25 @@
           }).join('')
           : '<p class="social-muted">Nenhum atleta encontrado. Confira o nome ou o ID.</p>';
       }).catch(function (error) {
+        if (requestId !== searchSequence) return;
         console.error('Unable to search athlete profiles', error);
         resultBox.innerHTML = '<p class="social-error">Não foi possível buscar atletas. Verifique a conexão e tente novamente.</p>';
+      }).finally(function () {
+        if (requestId !== searchSequence) return;
+        resultBox.removeAttribute('aria-busy');
+        submitButton.disabled = false;
+        submitButton.textContent = 'Buscar';
       });
     };
+    root.querySelector('#socialQuery').addEventListener('input', function () {
+      searchSequence++;
+      var currentSubmit = root.querySelector('#socialSearch button[type="submit"]');
+      currentSubmit.disabled = false;
+      currentSubmit.textContent = 'Buscar';
+      var currentResults = root.querySelector('#socialSearchResults');
+      currentResults.removeAttribute('aria-busy');
+      currentResults.innerHTML = '<p class="social-search-hint">Pressione Buscar para pesquisar este termo.</p>';
+    });
 
     api.getProfile(ownPublicId).then(function (data) {
       var profile = rows(data)[0];
@@ -257,15 +425,15 @@
         reportError(root, 'Seu perfil social não foi encontrado. Confirme se a migração do Supabase foi aplicada.');
         return;
       }
-      root.querySelector('#socialCraques').textContent = profile.craques_count;
-      root.querySelector('#socialAudience').textContent = profile.arquibancada_count;
+      root.querySelector('#socialFollowing').textContent = profile.following_count;
+      root.querySelector('#socialFollowers').textContent = profile.followers_count;
       root.querySelector('#socialGames').textContent = profile.games_count;
       var profileGames = document.getElementById('profileSocialGames');
-      var profileCraques = document.getElementById('profileSocialCraques');
-      var profileAudience = document.getElementById('profileSocialAudience');
+      var profileFollowing = document.getElementById('profileSocialFollowing');
+      var profileFollowers = document.getElementById('profileSocialFollowers');
       if (profileGames) profileGames.textContent = profile.games_count;
-      if (profileCraques) profileCraques.textContent = profile.craques_count;
-      if (profileAudience) profileAudience.textContent = profile.arquibancada_count;
+      if (profileFollowing) profileFollowing.textContent = profile.following_count;
+      if (profileFollowers) profileFollowers.textContent = profile.followers_count;
     }).catch(function (error) {
       console.error('Unable to load athlete social profile', error);
       reportError(root, 'Não foi possível carregar o perfil social. Verifique se a migração do Supabase foi aplicada.');
@@ -297,11 +465,11 @@
             '</div><div class="social-actions"><button type="button" data-profile-id="' +
             esc(item.athlete_public_id) + '">Ver perfil</button></div></article>';
         }).join('')
-        : '<p class="social-muted">Ainda não há partidas concluídas pelos seus Craques.</p>';
+        : '<p class="social-muted">Ainda não há atividades de atletas que você segue.</p>';
     }).catch(function (error) {
       console.error('Unable to load followed athletes activities', error);
       root.querySelector('#socialFeedList').innerHTML =
-        '<p class="social-error">Não foi possível carregar os jogos da arquibancada.</p>';
+        '<p class="social-error">Não foi possível carregar as atividades de quem você segue.</p>';
     });
 
     api.notifications().then(function (data) {
@@ -312,10 +480,10 @@
       list.innerHTML = notifications.length
         ? notifications.map(function (item) {
           var message = item.notification_type === 'follow'
-            ? item.actor_name + ' entrou na sua arquibancada.'
+            ? item.actor_name + ' começou a seguir você.'
             : item.notification_type === 'match_invitation'
             ? item.actor_name + ' convidou você para confirmar uma partida.'
-            : item.actor_name + ' concluiu uma partida na sua arquibancada.';
+            : item.actor_name + ' concluiu uma partida.';
           return '<article class="social-notification' + (item.read_at ? '' : ' unread') + '">' +
             avatar('', item.actor_name) + '<div class="social-person-info"><b>' + esc(message) +
             '</b><small>' + esc(new Date(item.created_at).toLocaleString('pt-BR')) + '</small>' +
@@ -338,63 +506,90 @@
     });
 
     function loadConnections(publicId, relation) {
-      var list = root.querySelector('#socialConnections');
-      list.hidden = false;
-      list.innerHTML = '<p class="social-muted">Carregando atletas...</p>';
-      api.listConnections(publicId, relation).then(function (data) {
+      var title = relation === 'following' ? 'Seguindo' : 'Seguidores';
+      showPopup(title, '<p class="social-muted">Carregando atletas...</p>');
+      api.getProfile(publicId).then(function (data) {
+        var target = rows(data)[0];
+        if (!target) throw new Error('Profile is unavailable');
+        if (relation === 'followers' && target.followers_hidden && !target.is_self) {
+          showPopup(title, '<p class="social-muted">Este atleta ocultou a lista. Total de seguidores: <b>' +
+            esc(target.followers_count) + '</b>.</p>');
+          return null;
+        }
+        return api.listConnections(publicId, relation);
+      }).then(function (data) {
+        if (data === null) return;
         var people = rows(data);
-        list.innerHTML = '<h3>' + (relation === 'craques' ? 'Meus Craques' : 'Minha Arquibancada') +
-          '</h3>' + (people.length
+        cacheProfiles(people);
+        showPopup(title, '<div class="social-list">' + (people.length
             ? people.map(function (person) {
               return '<article class="social-person">' + avatar(person.photo_url, person.display_name) +
                 '<div class="social-person-info"><b>' + esc(person.display_name) + '</b><small>' +
                 esc(person.public_id) + (person.city ? ' · ' + esc(person.city) : '') +
-                '</small></div><div class="social-person-actions"><button type="button" data-profile-id="' +
+                '</small>' + connectionDetails(person) + '</div><div class="social-person-actions"><button type="button" data-profile-id="' +
                 esc(person.public_id) + '">Ver perfil</button>' +
                 (person.public_id !== ownPublicId
                   ? followButton(person.public_id, person.followed_by_me === true)
                   : '') + '</div></article>';
             }).join('')
-            : '<p class="social-muted">Ainda não há atletas nesta lista.</p>');
+            : '<p class="social-muted">Ainda não há atletas nesta lista.</p>') + '</div>');
       }).catch(function (error) {
         console.error('Unable to load athlete connections', error);
-        list.innerHTML = '<p class="social-error">Não foi possível carregar esta lista.</p>';
+        var missingSocialRpc = error && ['PGRST202', '42883'].indexOf(String(error.code || '')) >= 0;
+        var message = missingSocialRpc && relation === 'followers'
+          ? 'A lista de seguidores ainda n&atilde;o est&aacute; dispon&iacute;vel no servidor. Atualize as migra&ccedil;&otilde;es do Supabase para habilitar esta fun&ccedil;&atilde;o com prote&ccedil;&atilde;o de privacidade.'
+          : 'N&atilde;o foi poss&iacute;vel carregar esta lista. Tente novamente.';
+        showPopup(title, '<p class="social-error">' + message + '</p>');
       });
     }
 
     function showProfile(publicId) {
-      var details = root.querySelector('#socialDetails');
-      details.hidden = false;
-      details.innerHTML = '<p class="social-muted">Carregando perfil...</p>';
+      showPopup('Perfil do atleta', '<p class="social-muted">Carregando perfil...</p>');
       api.getProfile(publicId).then(function (data) {
         var profile = rows(data)[0];
         if (!profile) {
-          details.innerHTML = '<p class="social-muted">Este perfil não está disponível.</p>';
+          showPopup('Perfil do atleta', '<p class="social-muted">Este perfil não está disponível.</p>');
           return;
         }
-        details.innerHTML = '<article class="social-profile-card"><div class="social-profile-top">' +
-          avatar(profile.photo_url, profile.display_name) + '<div><h3>' +
+        cacheProfiles(profile);
+        showPopup(profile.display_name, '<article class="social-profile-card"><div class="social-profile-top">' +
+          avatar(profile.photo_url, profile.display_name) + '<div class="social-profile-identity">' + stateBadge(profile.state_code) + '<div><h3>' +
           esc(profile.display_name) + '</h3><p>' + esc(profile.public_id) + ' · ' +
           esc(profile.city || 'Cidade não informada') + '</p><p>' +
-          esc((profile.sports || []).join(', ') || 'Modalidade não informada') + '</p></div></div>' +
+          esc((profile.sports || []).join(', ') || 'Modalidade não informada') + '</p><p>Aproveitamento: ' + (profile.win_percentage == null ? '—' : esc(profile.win_percentage) + '%') + '</p></div></div></div>' +
           '<div class="social-counts"><div class="social-count"><b>' +
-          esc(profile.games_count) + '</b><span>Jogos</span></div><button class="social-count" data-connection-relation="craques" data-profile-id="' +
-          esc(profile.public_id) + '"><b>' + esc(profile.craques_count) +
-          '</b><span>Craques</span></button><button class="social-count" data-connection-relation="arquibancada" data-profile-id="' +
-          esc(profile.public_id) + '"><b>' + esc(profile.arquibancada_count) +
-          '</b><span>Arquibancada</span></button></div>' +
+          esc(profile.games_count) + '</b><span>Jogos</span></div><button class="social-count" data-connection-relation="following" data-profile-id="' +
+          esc(profile.public_id) + '"><b>' + esc(profile.following_count) +
+          '</b><span>Seguindo</span></button><button class="social-count" data-connection-relation="followers" data-profile-id="' +
+          esc(profile.public_id) + '"><b>' + esc(profile.followers_count) +
+          '</b><span>Seguidores</span></button></div>' +
           '<div class="social-actions"><button type="button" data-action="back-profile">Voltar</button>' +
           (!profile.is_self ? followButton(profile.public_id, profile.is_following === true) : '') +
-          '</div></article>';
+          '</div></article><div data-athlete-review-mount></div>');
+        var reviewMount = root.querySelector('[data-athlete-review-mount]');
+        if (reviewMount && typeof window.mountAthleteReviews === 'function') {
+          window.mountAthleteReviews(reviewMount, profile.public_id);
+        }
       }).catch(function (error) {
         console.error('Unable to load public athlete profile', error);
-        details.innerHTML = '<p class="social-error">Não foi possível abrir este perfil.</p>';
+        var cached = profileCache[publicId];
+        if (!cached) {
+          showPopup('Perfil do atleta', '<p class="social-error">Não foi possível abrir este perfil. Verifique a conexão e tente novamente.</p>');
+          return;
+        }
+        showPopup(cached.display_name, '<article class="social-profile-card"><div class="social-profile-top">' +
+          avatar(cached.photo_url, cached.display_name) + '<div><h3>' + esc(cached.display_name) +
+          '</h3><p>' + esc(cached.public_id) + ' · ' + esc(cached.city || 'Cidade não informada') +
+          '</p><p>' + esc((cached.sports || []).join(', ') || 'Modalidade não informada') + '</p></div></div>' +
+          '<p class="social-muted">Os dados completos do perfil não carregaram agora. Você ainda pode seguir este atleta.</p>' +
+          '<div class="social-actions"><button type="button" data-action="back-profile">Voltar</button>' +
+          followButton(cached.public_id, cached.followed_by_me === true) + '</div></article>');
       });
     }
 
     host.querySelectorAll('[data-social-connection]').forEach(function (button) {
       button.onclick = function () {
-        var relationButton = root.querySelector('[data-relation="' + button.dataset.socialConnection + '"]');
+      var relationButton = root.querySelector('[data-relation="' + button.dataset.socialConnection + '"]');
         if (relationButton) {
           root.scrollIntoView({ behavior: 'smooth', block: 'start' });
           relationButton.click();

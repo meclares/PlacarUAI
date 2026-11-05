@@ -1,4 +1,4 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="pt-BR">
 <head>
 <meta charset="utf-8">
@@ -76,6 +76,10 @@ header h1{display:flex;gap:8px;align-items:center}
 .account-mode button{min-height:38px;padding:7px 12px;border:0;border-radius:9px;background:transparent;color:var(--mut);font-size:13px;font-weight:700}
 .account-mode button[aria-pressed=true]{background:var(--card);color:var(--ink);box-shadow:0 1px 4px #06101f20}
 .account-fields{display:grid;gap:9px}
+.account-signup-fields{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:9px}
+.account-signup-fields[hidden]{display:none}
+.account-signup-fields .account-field{min-width:0}
+@media(max-width:420px){.account-signup-fields{grid-template-columns:minmax(0,1fr)}}
 .account-field{display:grid;gap:6px;color:var(--mut);font-size:12px;font-weight:700}
 .account-control{width:100%;min-height:44px;padding:10px 12px;border:1px solid var(--line);border-radius:10px;background:var(--bg);color:var(--ink);font:500 14px Inter,system-ui,sans-serif}
 .account-control:focus-visible{outline:3px solid color-mix(in srgb,var(--blue) 35%,transparent);border-color:var(--blue)}
@@ -243,7 +247,7 @@ header,footer{background:color-mix(in srgb,var(--bar) 84%,transparent);backdrop-
 header{border-bottom-color:color-mix(in srgb,var(--line) 75%,transparent)}
 header h1{color:var(--ink);font-size:clamp(25px,3vw,32px);letter-spacing:.04em}
 header h1 svg{stroke:var(--lime)}
-#main{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px;padding:14px;background:transparent}
+#main{position:relative;display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px;padding:14px;background:transparent}
 .p{position:relative;isolation:isolate;display:grid;grid-template-columns:minmax(0,1fr);grid-template-rows:auto minmax(0,1fr) auto auto;align-content:stretch;justify-items:center;gap:12px;min-width:0;min-height:0;padding:clamp(16px,2.4vw,30px);overflow:hidden;border:1px solid color-mix(in srgb,var(--line) 88%,transparent);border-radius:26px;background:linear-gradient(145deg,color-mix(in srgb,var(--card) 90%,transparent),color-mix(in srgb,var(--bar) 88%,transparent))!important;color:var(--ink)!important;backdrop-filter:blur(18px);-webkit-backdrop-filter:blur(18px);box-shadow:0 16px 38px #09121228,inset 0 1px #ffffff12;transition:border-color .24s,box-shadow .24s,background .24s}
 .p.A{--side-accent:var(--team-a);box-shadow:inset 0 3px var(--team-a),0 16px 38px #09121228,inset 0 1px #ffffff12}
 .p.B{--side-accent:var(--team-b);box-shadow:inset 0 3px var(--team-b),0 16px 38px #09121228,inset 0 1px #ffffff12}
@@ -282,7 +286,8 @@ footer{border-color:var(--line)}
 footer button{background:color-mix(in srgb,var(--card) 84%,transparent);color:var(--ink)}
 footer .go,.go{background:linear-gradient(135deg,#d5eab1,#b7d690)!important;border-color:#c4dfa0!important;color:#29352b!important}
 .stat,.medal-stat{background:color-mix(in srgb,var(--card) 84%,transparent);backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px)}
-.athlete-card{background:radial-gradient(ellipse at 85% 15%,color-mix(in srgb,var(--lime) 13%,transparent) 0,transparent 42%),linear-gradient(145deg,var(--card),var(--bg));box-shadow:0 18px 45px #09121230;backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);cursor:default}.athlete-top{cursor:pointer}
+.athlete-card{position:relative;background:radial-gradient(ellipse at 92% 0,color-mix(in srgb,var(--lime) 18%,transparent) 0,transparent 42%),linear-gradient(145deg,#1d2621,#111714 72%);border:1px solid color-mix(in srgb,var(--lime) 40%,var(--line));box-shadow:0 24px 60px #0005;backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);cursor:default}.athlete-card::after{position:absolute;inset:8px;border:1px solid #ffffff0a;border-radius:16px;content:"";pointer-events:none}.athlete-card-brand{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:18px;color:var(--lime);font-size:10px;font-weight:800;letter-spacing:.16em}.athlete-card-brand>span:first-child{display:flex;align-items:center;gap:8px}.athlete-card-brand>span:first-child::before{width:7px;height:7px;border-radius:50%;background:var(--lime);box-shadow:0 0 12px var(--lime);content:""}.athlete-card .state-flag{width:40px;height:32px;margin:0;border-radius:8px}.athlete-top{cursor:pointer;gap:17px}.athlete-meta{min-width:0}.athlete-kicker{display:block;margin-bottom:4px;color:#a6b0a5;font-size:10px;font-weight:700;letter-spacing:.12em;text-transform:uppercase}.athlete-card h2{font-size:clamp(25px,5vw,36px);letter-spacing:-.02em;overflow-wrap:anywhere}.athlete-card .muted{margin-top:3px;color:#b4beb4;font-size:12px}.sport-chip{display:inline-flex;align-items:center;gap:7px;margin-top:12px;padding:6px 10px;border:1px solid #c3e98e40;border-radius:999px;background:#c3e98e0e;color:#e5efdc;font-size:11px;font-weight:750}.sport-chip::before{width:6px;height:6px;border-radius:50%;background:var(--lime);content:""}.athlete-card .overall{min-width:72px;margin-left:auto;padding:8px 10px;border:1px solid #c3e98e35;border-radius:16px;background:#c3e98e0a;font-size:36px}.athlete-card .overall small{color:#b4beb4;font-size:9px;letter-spacing:.13em}.athlete-card .last-game{margin-top:17px}.athlete-top{cursor:pointer}
+@media(max-width:600px){.athlete-card{padding:17px}.athlete-card-brand{font-size:8px;letter-spacing:.1em}.athlete-top{gap:10px}.athlete-card .avatar{width:70px;height:70px;flex:none}.athlete-card .overall{min-width:58px;padding:6px 7px;font-size:30px}.athlete-card .overall small{font-size:8px}}
 dialog{background:var(--card);color:var(--ink);border-color:var(--line);box-shadow:0 22px 80px #09121248}
 dialog input,dialog select{background:var(--bg);color:var(--ink);border-color:var(--line)}
 .medal-stat{background:color-mix(in srgb,var(--card) 72%,transparent)}
@@ -296,12 +301,15 @@ dialog input,dialog select{background:var(--bg);color:var(--ink);border-color:va
 .social-count{display:grid;gap:4px;min-height:74px;padding:10px;border:1px solid var(--line);border-radius:14px;background:var(--bg);text-align:left}
 .social-count b{font:800 24px 'Barlow Condensed',sans-serif;color:var(--lime)}.social-count span{color:var(--mut);font-size:11px}
 .social-nav{display:flex;gap:7px;flex-wrap:wrap;margin:14px 0}.social-nav button[aria-pressed=true]{border-color:var(--lime);color:var(--lime)}
-.social-search{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:7px;margin:12px 0}.social-search input{min-width:0;width:100%;padding:10px 12px;border:1px solid var(--line);border-radius:12px;background:var(--bg);color:var(--ink);font:inherit}
+.social-discovery{margin:16px 0;padding:15px;border:1px solid var(--line);border-radius:16px;background:color-mix(in srgb,var(--bg) 68%,transparent)}.social-discovery-head{margin-bottom:10px}.social-discovery-head h3{font:800 20px 'Barlow Condensed',sans-serif}.social-discovery-head p,.social-search-hint{margin-top:3px;color:var(--mut);font-size:12px}.social-search{display:grid;gap:6px;margin:10px 0}.social-search-label{font-size:11px;font-weight:750;color:var(--mut)}.social-search-controls{display:grid;grid-template-columns:minmax(0,1fr) auto auto;gap:7px}.social-search-controls input{min-width:0;width:100%;min-height:44px;padding:10px 12px;border:1px solid var(--line);border-radius:12px;background:var(--bg);color:var(--ink);font:inherit}.social-search-controls button{min-height:44px}.social-search-controls button:disabled{cursor:wait;opacity:.6}.social-search-hint{margin:8px 0 0}.social-search-result-count{margin:2px 0 4px;color:var(--mut);font-size:11px;font-weight:750}
 .social-list{display:grid;gap:8px;margin-top:12px}.social-person,.social-activity,.social-notification{display:flex;align-items:center;gap:10px;padding:11px;border:1px solid var(--line);border-radius:14px;background:var(--bg)}
 .social-avatar{width:42px;height:42px;display:grid;place-items:center;overflow:hidden;flex:none;border-radius:50%;background:var(--bar);color:var(--lime);font-weight:800}.social-avatar img{width:100%;height:100%;object-fit:cover}
 .social-person-info{min-width:0;flex:1}.social-person-info b,.social-person-info small{display:block;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}.social-person-info small{color:var(--mut);font-size:11px}
+.social-connection-meta{display:flex;align-items:center;gap:7px;flex-wrap:wrap;margin-top:5px;color:var(--mut);font-size:10px}.social-connection-meta b{color:var(--lime);font-size:10px}.social-state-badge .state-flag{width:30px;height:22px;margin:0;border-radius:4px}.social-state-badge .state-flag span{font-size:10px}.social-state-badge .state-flag img{object-fit:cover}.social-profile-identity{display:flex;align-items:center;gap:9px;min-width:0}.social-profile-identity>div:last-child{min-width:0}
 .social-person-actions{display:flex;gap:5px;flex-wrap:wrap;justify-content:flex-end}.social-person-actions button,.social-actions button{min-height:36px;padding:6px 10px;font-size:12px}.social-follow-button{border-color:var(--lime);color:var(--lime)}.social-follow-button[data-following=true]{border-color:var(--lime);background:var(--lime);color:#18200f}
+@media(max-width:600px){.social-root{padding:13px}.social-discovery{padding:12px}.social-search-controls{grid-template-columns:minmax(0,1fr) auto}.social-search-controls [data-action="clear-search"]{grid-column:1/-1}.social-person{align-items:flex-start;flex-wrap:wrap}.social-person-info{flex-basis:calc(100% - 58px)}.social-person-actions{width:100%;justify-content:flex-start;padding-left:52px}.social-popup{padding:12px}}
 .social-panel{padding-top:8px}.social-profile-card{padding:14px;border:1px solid var(--line);border-radius:16px;background:var(--bg)}.social-profile-top{display:flex;align-items:center;gap:12px}.social-profile-top .social-avatar{width:68px;height:68px}.social-profile-top h3{font:800 23px 'Barlow Condensed',sans-serif}.social-profile-top p{color:var(--mut);font-size:12px}
+.social-popup{width:min(94vw,620px);max-width:620px;max-height:90dvh;padding:16px;border:1px solid var(--line);border-radius:18px;background:var(--card);color:var(--ink)}.social-popup::backdrop{background:#050806b8;backdrop-filter:blur(4px)}.social-popup-head{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:10px}.social-popup-head h3{margin:0;font:800 23px 'Barlow Condensed',sans-serif}.social-popup-close{width:38px;min-height:38px;padding:0;border-radius:50%}.social-popup-body{max-height:calc(90dvh - 100px);overflow:auto}.social-confirm-card{display:flex;align-items:center;gap:12px;padding:13px;border:1px solid var(--line);border-radius:14px;background:var(--bg)}.social-confirm-card .social-avatar{width:58px;height:58px}.social-confirm-info{min-width:0}.social-confirm-info b,.social-confirm-info small{display:block;overflow-wrap:anywhere}.social-confirm-info small{color:var(--mut);font-size:12px}.social-popup-actions{display:flex;justify-content:flex-end;gap:8px;margin-top:12px}.social-popup-actions button{min-height:42px;padding:8px 14px}.social-popup-actions .go{background:var(--lime)!important;color:#18200f!important}
 .social-game-score{margin:8px 0 3px;font:800 20px 'Barlow Condensed',sans-serif}.social-notification.unread{border-color:color-mix(in srgb,var(--lime) 65%,var(--line))}
 .social-actions{display:flex;gap:6px;flex-wrap:wrap;margin-top:8px}.social-error{padding:10px;border-radius:12px;background:#a9333320;color:#ff8888;font-size:13px}
 .match-invite-results{display:grid;gap:5px;margin-top:6px}.match-invite-results button{width:100%;display:flex;justify-content:space-between;align-items:center;min-height:38px;padding:6px 10px;text-align:left}.match-invite-chip{display:inline-flex;align-items:center;gap:6px;margin:5px 5px 0 0;padding:5px 8px;border:1px solid var(--line);border-radius:999px;color:var(--ink);font-size:12px}.match-invite-chip button{min-height:22px;padding:0 3px;border:0;background:transparent;color:var(--mut)}
@@ -319,6 +327,14 @@ html:fullscreen body>#main #scoreFull span{position:static;width:auto;height:aut
 @media(max-width:600px){.tabs:not(.is-collapsed){gap:8px;padding:7px 10px max(10px,env(safe-area-inset-bottom))}.tabs>[data-tab]{width:62px;height:62px;min-height:62px}.tabs>[data-tab][aria-current=true]{width:68px;height:68px;min-height:68px}.tabs .tabs-toggle{width:40px;height:40px;min-height:40px}}
 @media(orientation:landscape) and (max-height:520px){.tabs:not(.is-collapsed){gap:6px;padding:4px 8px}.tabs>[data-tab]{width:52px;height:52px;min-height:52px}.tabs>[data-tab][aria-current=true]{width:58px;height:58px;min-height:58px}.tabs .tabs-toggle{width:38px;height:38px;min-height:38px}}
 @media(prefers-reduced-motion:reduce){.tabs{transition:none}}
+.center-whistle{position:absolute;z-index:5;top:50%;left:50%;display:grid;place-items:center;width:54px;height:54px;min-height:54px;padding:0;border:2px solid color-mix(in srgb,var(--lime) 72%,white);border-radius:50%;background:color-mix(in srgb,var(--bar) 92%,transparent);color:var(--lime);box-shadow:0 6px 22px #0007;transform:translate(-50%,-50%)}.center-whistle svg{width:24px;height:24px;fill:none;stroke:currentColor;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
+.center-whistle{transition:transform .08s ease,box-shadow .08s ease}.center-whistle:active{transform:translate(-50%,-50%) translateY(2px) scale(.96);box-shadow:0 2px 9px #0007}
+.profile-public-id{display:flex;align-items:center;justify-content:space-between;gap:14px;margin:14px 0;padding:15px 17px;border:1px solid color-mix(in srgb,var(--lime) 55%,var(--line));border-radius:16px;background:linear-gradient(120deg,color-mix(in srgb,var(--lime) 12%,var(--card)),var(--card));box-shadow:0 8px 24px #0002}.profile-public-id>div{display:grid;gap:4px;min-width:0}.profile-public-id small{color:var(--lime);font-size:10px;font-weight:850;letter-spacing:.15em}.profile-public-id strong{font:800 27px 'Barlow Condensed',sans-serif;letter-spacing:.07em;overflow-wrap:anywhere}.profile-public-id span{color:var(--mut);font-size:11px}.profile-public-id button{flex:none;border-color:var(--lime);background:var(--lime);color:#18200f;font-weight:800}.profile-public-id button:disabled{opacity:.55}
+.n.name-prompt{display:inline-flex;align-items:center;gap:8px;min-height:46px;padding:8px 17px;border:1px solid color-mix(in srgb,var(--lime) 72%,white);background:color-mix(in srgb,var(--lime) 15%,var(--card));color:var(--lime);box-shadow:0 0 0 3px color-mix(in srgb,var(--lime) 12%,transparent),0 5px 16px #0003;font-size:clamp(16px,2.7vw,22px)}
+.profile-card-actions{display:flex;flex-wrap:wrap;gap:7px;margin-top:12px}.profile-card-actions button{min-height:36px;padding:7px 11px;border:1px solid color-mix(in srgb,var(--lime) 42%,transparent);border-radius:9px;background:#c3e98e12;color:#edf4e5;font-size:11px;font-weight:750}.profile-card-actions button.go{background:var(--lime)!important;color:#18200f!important}
+.share-dialog{width:min(92vw,520px);max-width:520px;max-height:94dvh;padding:16px;border:1px solid var(--line);border-radius:20px;background:var(--card);color:var(--ink)}.share-dialog::backdrop{background:#050806c9;backdrop-filter:blur(5px)}.share-dialog-head{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-bottom:12px}.share-dialog-head h2{font:800 24px 'Barlow Condensed',sans-serif}.share-dialog-close{width:38px;min-height:38px;padding:0;border-radius:50%}.share-dialog-preview{display:flex;justify-content:center;max-height:calc(94dvh - 150px);overflow:auto;border-radius:14px;background:#090d0b}.share-dialog-preview img{display:block;width:auto;height:auto;max-width:100%;max-height:calc(94dvh - 150px);object-fit:contain;aspect-ratio:9/16}.share-dialog-actions{display:flex;gap:8px;margin-top:12px}.share-dialog-actions button{flex:1;min-height:44px;font-size:13px;font-weight:800}.share-dialog-actions .go{background:var(--lime)!important;color:#18200f!important}
+@media(max-width:600px){.profile-public-id{align-items:flex-start;padding:13px;gap:8px}.profile-public-id strong{font-size:23px}.profile-public-id button{padding:8px 10px;font-size:12px}}
+.reviews{margin-top:20px}.reviews-head{align-items:flex-start}.reviews-head h3{margin:4px 0}.review-loading,.review-message{margin:12px 0;color:var(--mut);font-size:12px;line-height:1.5}.review-toolbar{display:flex;align-items:center;justify-content:space-between;gap:12px;margin:8px 0 12px;padding:12px;border:1px solid #ffffff15;border-radius:12px;background:#ffffff05}.review-toolbar b,.review-toolbar small{display:block}.review-toolbar b{font-size:12px}.review-toolbar small{margin-top:3px;color:var(--mut);font-size:10px}.review-privacy,.review-moderation button{min-height:35px;padding:7px 10px;border:1px solid #c3e98e55;border-radius:9px;background:#c3e98e12;color:var(--lime);font-size:10px;font-weight:800}.review-list{display:grid;gap:9px}.review-entry{padding:13px;border:1px solid #ffffff16;border-radius:13px;background:#0f130f}.review-entry-head,.review-entry-foot{display:flex;align-items:center;justify-content:space-between;gap:10px}.review-entry-head b,.review-entry-head small{display:block}.review-entry-head b{font-size:12px}.review-entry-head small,.review-entry-foot>span{margin-top:3px;color:var(--mut);font-size:10px}.review-entry>p{margin:10px 0;color:#e8eee3;font-size:13px;line-height:1.55;overflow-wrap:anywhere}.review-stars{color:var(--lime);font-size:15px;letter-spacing:2px;white-space:nowrap}.review-moderation{display:flex;gap:6px}.review-moderation button{min-height:30px;padding:5px 8px}.review-form{display:grid;gap:10px;margin-top:14px}.review-form-label{font-size:13px;font-weight:800}.rating-pick{flex-wrap:wrap}.rating-pick button{min-width:38px;min-height:40px;font-size:28px}.rating-pick button:focus-visible,.review-suggestions button:focus-visible,.review-privacy:focus-visible,.review-moderation button:focus-visible{outline:2px solid var(--lime);outline-offset:2px}.review-form textarea{min-height:92px;margin:0}.review-suggestions-label{color:var(--mut);font-size:10px;font-weight:700}.review-suggestions{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:7px}.review-suggestions button{min-height:56px;padding:8px;border:1px solid #c3e98e26;border-radius:10px;background:#c3e98e08;color:#c9d3c4;text-align:left;font-size:10px;line-height:1.4;transition:background .18s,border-color .18s}.review-suggestions button:hover{border-color:#c3e98e66;background:#c3e98e12}.review-submit{justify-self:start;min-height:42px;padding:9px 15px}.review-submit:disabled,.review-privacy:disabled,.review-moderation button:disabled{opacity:.55;cursor:wait}@media(max-width:600px){.reviews{padding:14px}.review-toolbar{align-items:flex-start;flex-direction:column}.review-suggestions{grid-template-columns:1fr}.review-suggestions button{min-height:40px}}
 </style>
 </head>
 <body>
@@ -343,7 +359,6 @@ html:fullscreen body>#main #scoreFull span{position:static;width:auto;height:aut
 <section id="profile" aria-label="Perfil do atleta"></section>
 <nav id="appNavigation" class="tabs" aria-label="Navegação principal"><button id="tabsToggle" class="tabs-toggle" type="button" aria-controls="appNavigation" aria-expanded="true" aria-label="Ocultar menu de navegação" title="Ocultar menu"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="m6 9 6 6 6-6"/></svg></button><button data-tab="score" aria-current="true" aria-label="Início, Placar"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="4" width="18" height="16" rx="2"/><path d="M8 4v16M16 4v16M3 9h5m8 0h5M3 15h5m8 0h5"/></svg><span>Placar</span></button><button data-tab="history" aria-label="Histórico"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2M5.6 5.6 4 4"/></svg><span>Histórico</span></button><button data-tab="profile" aria-label="Perfil"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="8" r="4"/><path d="M4 21a8 8 0 0 1 16 0M18 4l1.5 1.5L22 3"/></svg><span>Perfil</span></button></nav>
 <footer>
-  <button id="whistle" data-i="vol"><span>Apito</span></button>
   <button id="flip" data-i="swap"><span>Virar de quadra</span></button>
   <button id="reset" data-i="reset"><span>Zerar</span></button>
   <button id="hist" data-i="clock"><span>Histórico</span></button>
@@ -352,6 +367,7 @@ html:fullscreen body>#main #scoreFull span{position:static;width:auto;height:aut
 </footer>
 <dialog id="dlg"></dialog>
 <dialog id="medalDialog" class="medal-dialog" aria-label="Card 3D do atleta"></dialog>
+<dialog id="shareDialog" class="share-dialog" aria-label="Compartilhar card do atleta"></dialog>
 <dialog id="tourDialog" class="tour-dialog" aria-label="Gerenciamento de campeonato"></dialog>
 <dialog id="cfg" aria-label="Configurações"><h2>Configurações</h2>
 <p class="lb">Modalidade</p><div id="sMod"></div>
@@ -361,12 +377,13 @@ html:fullscreen body>#main #scoreFull span{position:static;width:auto;height:aut
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.118.0/dist/umd/supabase.js"></script>
 <script src="./supabase-client-config.js"></script>
 <script src="./auth-storage.js"></script>
+<script src="./profile-registration.js"></script>
 <script>
 if('serviceWorker' in navigator&&window.isSecureContext)navigator.serviceWorker.register('./service-worker.js').catch(function(error){console.error('Unable to register the PlacarUai app service worker',error)});
 </script>
 <script>
 var KEY='placaruai.v1',HKEY='placaruai.hist.v1';
-var PKEY='placaruai.profile.v1', AKEY='placaruai.account.v1', RKEY='placaruai.accounts.v1', LKEY='placaruai.athlete.matches.v1', FBKEY='placaruai.profile.feedback.v1', TKEY='placaruai.tournaments.v1';
+var PKEY='placaruai.profile.v1', AKEY='placaruai.account.v1', RKEY='placaruai.accounts.v1', LKEY='placaruai.athlete.matches.v1', TKEY='placaruai.tournaments.v1';
 function ld(k,d){try{var v=localStorage.getItem(k);return v?JSON.parse(v):d}catch(e){console.error('Unable to read local app data',e);var status=document.getElementById('st');if(status){status.textContent='Não foi possível ler alguns dados salvos neste dispositivo.';status.classList.remove('hide')}return d}}
 function sv(k,v){try{localStorage.setItem(k,JSON.stringify(v));return true}catch(e){console.error('Unable to save local app data',e);var status=document.getElementById('st');if(status){status.textContent='Não foi possível salvar neste dispositivo. Verifique o espaço disponível e as permissões do navegador.';status.classList.remove('hide')}return false}}
 (function removeLegacyCredentials(){
@@ -380,14 +397,19 @@ function sv(k,v){try{localStorage.setItem(k,JSON.stringify(v));return true}catch
   try{localStorage.removeItem(AKEY)}catch(error){console.error('Unable to clear legacy local account',error)}
   try{sessionStorage.removeItem('placaruai.master')}catch(error){console.error('Unable to clear legacy master session',error)}
 })();
-var T=function(n){return{name:n,pts:0,games:0,sets:0,y:0,r:0}};
+var T=function(n){return{name:n,players:[{name:'',publicId:''},{name:'',publicId:''}],pts:0,games:0,sets:0,y:0,r:0}};
 var S=ld(KEY,null)||{mod:'volei',mode:'toque',flip:false,theme:null,A:T('Dupla A'),B:T('Dupla B')};
 S.tb=!!S.tb;S.mtb=!!S.mtb;S.done=!!S.done;S.win=S.win||null;S.alert=S.alert||'';S.cfg=S.cfg||{fmt:'set6',nad:true};S.cfg.vp=S.cfg.vp||{volei:21,futevolei:18};S.undo=S.undo||[];S.hs=S.hs||[];S.A.games=S.A.games||0;S.B.games=S.B.games||0;
+['A','B'].forEach(function(k){if(!Array.isArray(S[k].players))S[k].players=[{name:'',publicId:''},{name:'',publicId:''}];while(S[k].players.length<2)S[k].players.push({name:'',publicId:''});S[k].players=S[k].players.slice(0,2).map(function(player){return{name:String(player&&player.name||''),publicId:String(player&&(player.publicId||player.public_id)||'').toUpperCase()}})});
 var NAMES={volei:'Vôlei',futevolei:'Futevôlei',beach:'Beach tennis'};
 function save(){sv(KEY,S)}
 function esc(s){return String(s).replace(/[&<>"]/g,function(c){return{'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]})}
 
 function personName(value){return String(value||'').trim().toLocaleLowerCase('pt-BR').replace(/(^|[\s'-])([a-z\u00e0-\u00f6\u00f8-\u00ff])/g,function(_,sep,letter){return sep+letter.toLocaleUpperCase('pt-BR')})}
+function ownAthletePublicId(){return String(athleteAccount&&athleteAccount.uaId||'').trim().toUpperCase()}
+function ownAthleteDisplayName(){return personName(athlete&&athlete.name||athleteAccount&&athleteAccount.displayName||'Atleta')}
+function teamRosterLabel(team){return(team.players||[]).map(function(player){return personName(player.name||'')||player.publicId||''}).filter(Boolean).join(' / ')}
+function ownPlayingSide(){var id=ownAthletePublicId();if(!id)return'';return['A','B'].find(function(k){return(S[k].players||[]).some(function(player){return player.publicId===id})})||''}
 
 var IC={vol:'<path d="M11 5 6 9H2v6h4l5 4V5z"/><path d="M15.5 8.5a5 5 0 0 1 0 7M19 5a10 10 0 0 1 0 14"/>',swap:'<path d="M8 3 4 7l4 4M4 7h16M16 21l4-4-4-4M20 17H4"/>',reset:'<path d="M3 12a9 9 0 1 0 3-6.7L3 8M3 3v5h5"/>',clock:'<circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/>',flag:'<path d="M4 22V4M4 4h13l-2 4 2 4H4"/>',sliders:'<path d="M4 6h8M18 6h2M4 12h2M12 12h8M4 18h10M20 18h0"/><circle cx="15" cy="6" r="2"/><circle cx="9" cy="12" r="2"/><circle cx="17" cy="18" r="2"/>',menu:'<path d="M4 7h16M4 12h16M4 17h16"/>',moon:'<path d="M21 12.8A9 9 0 1 1 11.2 3 7 7 0 0 0 21 12.8z"/>',sun:'<circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"/>',full:'<path d="M8 3H5a2 2 0 0 0-2 2v3M21 8V5a2 2 0 0 0-2-2h-3M3 16v3a2 2 0 0 0 2 2h3M16 21h3a2 2 0 0 0 2-2v-3"/>',exitfull:'<path d="M8 3v5H3M21 8h-5V3M3 16h5v5M16 21v-5h5"/>',edit:'<path d="M12 20h9M16.5 3.5a2.1 2.1 0 0 1 3 3L7 19l-4 1 1-4z"/>',ball:'<circle cx="12" cy="12" r="9"/><path d="M5.5 5.5c4 2.5 4 10.500 0 13M18.500 5.500c-4 2.500-4 10.500 0 13"/>'};
 function ic(n){return '<svg viewBox="0 0 24 24" aria-hidden="true">'+IC[n]+'</svg>'}
@@ -407,28 +429,29 @@ function whistle(){
 }
 
 /* tela */
-var previousRenderedScores={};
+var previousRenderedScores={},landscapeScoring=window.matchMedia('(orientation: landscape)');
 function render(){
   var m=document.getElementById('main');
   m.innerHTML=['A','B'].map(function(k){
     var s=S[k],tap=S.mode==='toque',score=String(show(k)),scoreChanged=previousRenderedScores[k]!==undefined&&previousRenderedScores[k]!==score;
     previousRenderedScores[k]=score;
     return '<section class="p '+k+(S.done&&S.win===k?' win':'')+'" data-k="'+k+'" style="order:'+((k==='A')!==S.flip?1:2)+'">'+
-      '<button class="n" data-act="name" aria-label="Editar nome de '+esc(s.name)+'">'+ic('edit')+esc(s.name)+'</button>'+
+      '<button class="n'+(s.name==='Dupla '+k?' name-prompt':'')+'" data-act="name" aria-label="Editar nome e atletas da Dupla '+k+'">'+ic('edit')+'<span>'+esc(s.name==='Dupla '+k?'Dupla '+k:s.name)+'</span><small>'+esc(teamRosterLabel(s)||'Adicionar atletas, IDs ou convidados')+'</small></button>'+
       '<div class="s'+(scoreChanged?' score-changed':'')+'" aria-live="polite">'+score+'</div>'+(bt()?'<div class="sub">Games '+s.games+' · Sets '+s.sets+'</div>':'')+
-      '<div class="ctl">'+(tap?'<button class="big" data-act="dec" aria-label="Diminuir ponto">−</button><span class="hint">Toque na cor para somar</span>':
+      '<div class="ctl">'+(tap&&!landscapeScoring.matches?'<button class="big" data-act="dec" aria-label="Diminuir ponto">−</button><span class="hint">Toque na cor para somar</span>':
         '<button class="big" data-act="dec" aria-label="Diminuir ponto">−</button><button class="big" data-act="inc" aria-label="Aumentar ponto">+</button>')+'</div>'+
       '<div class="ctl">'+
         (bt()?'':'<span class="mini">Sets <button data-act="sdec" aria-label="Diminuir set">−</button><span class="c">'+s.sets+'</span><button data-act="sinc" aria-label="Aumentar set">+</button></span>')+
         '<span class="mini"><button data-act="y"><i class="cd y"></i>'+s.y+'</button><button data-act="r"><i class="cd r"></i>'+s.r+'</button><button data-act="cz" aria-label="Zerar cartões">Zerar cartões</button></span>'+
       '</div></section>';
-  }).join('');
+  }).join('')+'<button class="center-whistle" type="button" data-whistle aria-label="Apitar" title="Apitar">'+ic('vol')+'</button>';
   document.querySelectorAll('#mod button').forEach(function(b){b.setAttribute('aria-pressed',b.dataset.v===S.mod)});
   document.querySelectorAll('#mode button').forEach(function(b){b.setAttribute('aria-pressed',b.dataset.v===S.mode)});
   status();document.getElementById('rules').classList.remove('hide');
   save();
 }
 document.getElementById('main').addEventListener('click',function(e){
+  if(e.target.closest('[data-whistle]')){whistle();return}
   var p=e.target.closest('.p');if(!p)return;
   var s=S[p.dataset.k],b=e.target.closest('button'),a=b&&b.dataset.act;
   if(!b){if(S.mode==='toque')add(p.dataset.k);return}
@@ -504,10 +527,35 @@ function open(html,okTxt,onOk,cancelTxt){
   dlg.showModal();
 }
 function editName(k){
-  open('<h2>Nome da dupla</h2><input id="nm" maxlength="30" value="'+esc(S[k].name)+'" aria-label="Nome da dupla">','Salvar',function(){
-    var v=document.getElementById('nm').value.trim();if(!v)return false;S[k].name=personName(v);render()});
-  var i=document.getElementById('nm');i.focus();i.select();
-  i.onkeydown=function(e){if(e.key==='Enter')document.getElementById('dok').click()};
+  var ownId=ownAthletePublicId(),api=window.placaruaiSocialApi,players=S[k].players||[{name:'',publicId:''},{name:'',publicId:''}];
+  var playerFields=players.map(function(player,index){return '<section class="score-player-edit"><b>Atleta '+(index+1)+'</b><label class="lb">Nome para esta partida</label><input id="scorePlayerName'+index+'" maxlength="50" placeholder="Nome livre ou convidado" value="'+esc(player.name||'')+'"><label class="lb">ID UA (opcional, para contar no perfil)</label><div class="score-player-id"><input id="scorePlayerId'+index+'" maxlength="11" placeholder="UA-XXXXXXXX" value="'+esc(player.publicId||'')+'"><button type="button" data-validate-player="'+index+'">Validar</button></div><p id="scorePlayerStatus'+index+'" class="hint" role="status"></p><div class="score-player-actions">'+(ownId?'<button type="button" data-use-own-profile="'+index+'">Adicionar meu perfil</button>':'')+'<button type="button" data-add-guest="'+index+'">Convidado</button><button type="button" data-clear-player="'+index+'">Remover</button></div></section>'}).join('');
+  open('<h2>Dupla '+k+' · atletas da partida</h2><label class="lb">Nome da dupla</label><input id="scoreTeamName" maxlength="30" value="'+esc(S[k].name)+'" aria-label="Nome da dupla"><p class="hint">Use um nome livre para qualquer participante. Vincule um ID UA quando quiser registrar o jogo no perfil do atleta.</p><div class="score-player-grid">'+playerFields+'</div><p id="scoreRosterError" class="review-message" role="status"></p>','Salvar participantes',function(){return false},'Cancelar');
+  async function validatePlayer(index){
+    var id=document.getElementById('scorePlayerId'+index).value.trim().toUpperCase(),status=document.getElementById('scorePlayerStatus'+index),nameInput=document.getElementById('scorePlayerName'+index);
+    document.getElementById('scorePlayerId'+index).value=id;
+    if(!/^UA-[A-Z0-9]{4,8}$/.test(id)){status.textContent='Informe um ID no formato UA-XXXXXXXX.';return null}
+    if(!api||!api.ready()){status.textContent='Entre na sua conta para validar e vincular o ID.';return null}
+    status.textContent='Validando perfil...';
+    try{var result=await api.getProfile(id),profile=Array.isArray(result)?result[0]:result;if(!profile){status.textContent='ID não encontrado.';return null}nameInput.value=profile.display_name||profile.name||nameInput.value;status.textContent='Perfil vinculado: '+(profile.display_name||profile.public_id);return profile}
+    catch(error){console.error('Unable to validate match participant ID',error);status.textContent='Não foi possível validar esse ID. Tente novamente.';return null}
+  }
+  dlg.querySelectorAll('[data-validate-player]').forEach(function(button){button.onclick=function(){validatePlayer(Number(button.dataset.validatePlayer))}});
+  dlg.querySelectorAll('[data-use-own-profile]').forEach(function(button){button.onclick=function(){var index=Number(button.dataset.useOwnProfile);document.getElementById('scorePlayerName'+index).value=ownAthleteDisplayName();document.getElementById('scorePlayerId'+index).value=ownId;document.getElementById('scorePlayerStatus'+index).textContent='Seu perfil está selecionado para esta dupla.'}});
+  dlg.querySelectorAll('[data-add-guest]').forEach(function(button){button.onclick=function(){var index=Number(button.dataset.addGuest),name=document.getElementById('scorePlayerName'+index);if(!name.value.trim())name.value='Convidado '+(index+1);document.getElementById('scorePlayerId'+index).value='';document.getElementById('scorePlayerStatus'+index).textContent='Participante livre; não será associado a um perfil UA.';name.focus()}});
+  dlg.querySelectorAll('[data-clear-player]').forEach(function(button){button.onclick=function(){var index=Number(button.dataset.clearPlayer);document.getElementById('scorePlayerName'+index).value='';document.getElementById('scorePlayerId'+index).value='';document.getElementById('scorePlayerStatus'+index).textContent='Atleta removido desta dupla.'}});
+  dlg.querySelector('#dok').onclick=async function(){
+    var teamName=document.getElementById('scoreTeamName').value.trim(),error=document.getElementById('scoreRosterError'),next=[];
+    if(!teamName){error.textContent='Informe o nome da dupla.';return}
+    for(var index=0;index<2;index++){
+      var id=document.getElementById('scorePlayerId'+index).value.trim().toUpperCase(),name=document.getElementById('scorePlayerName'+index).value.trim();
+      if(id){var profile=await validatePlayer(index);if(!profile)return;name=profile.display_name||name}
+      next.push({name:personName(name),publicId:id});
+    }
+    var ids=['A','B'].filter(function(side){return side!==k}).flatMap(function(side){return(S[side].players||[]).map(function(player){return player.publicId}).filter(Boolean)}).concat(next.map(function(player){return player.publicId}).filter(Boolean));
+    if(new Set(ids).size!==ids.length){error.textContent='O mesmo ID não pode ocupar mais de uma vaga nesta partida.';return}
+    S[k].name=personName(teamName);S[k].players=next;S.creatorIsPlayer=!!ownPlayingSide();render();dlg.close();
+  };
+  var nameInput=document.getElementById('scoreTeamName');nameInput.focus();nameInput.select();
 }
 document.getElementById('reset').onclick=function(){
   open('<h2>Zerar placar?</h2><p>Pontos, sets e cartões voltam para 0. Nada vai para o histórico.</p>','Zerar',function(){fresh();render()});
@@ -522,8 +570,8 @@ document.getElementById('end').onclick=function(){
   });
 };
 document.getElementById('hist').onclick=showAthleteHistory;
-document.getElementById('whistle').onclick=whistle;
 document.getElementById('flip').onclick=function(){S.flip=!S.flip;render()};
+if(landscapeScoring.addEventListener)landscapeScoring.addEventListener('change',render);else if(landscapeScoring.addListener)landscapeScoring.addListener(render);
 
 /* modalidade, modo, tema, tela cheia */
 document.getElementById('mod').onclick=function(e){var b=e.target.closest('button');if(b){S.mod=b.dataset.v;S.alert='';if(bt())S.done=false;else chk();render()}};
@@ -603,16 +651,17 @@ document.getElementById('rules').onclick=function(){
 (function(){var m=document.getElementById('sMod'),n=document.getElementById('sMode'),g=document.getElementById('sBtns'),cfg=document.getElementById('cfg');
   m.appendChild(document.getElementById('mod'));n.appendChild(document.getElementById('mode'));
   ['rules','theme','full','hist','reset'].forEach(function(i){g.appendChild(document.getElementById(i))});
+  var plusButton=document.createElement('button');plusButton.type='button';plusButton.className='go';plusButton.textContent='Gerenciar campeonatos · Plus';plusButton.onclick=function(){cfg.close();open('<h2>Gerenciar campeonatos · Plus</h2><p>Disponível em breve...</p>',null,null,'Voltar')};g.appendChild(plusButton);
   document.getElementById('menu').onclick=function(){cfg.showModal()};
   document.getElementById('cx').onclick=function(){cfg.close()};
   cfg.addEventListener('click',function(e){var b=e.target.closest('button');if(b&&['rules','full','hist','reset'].indexOf(b.id)>-1)cfg.close()});
 })();
 // Perfil opcional e histórico pessoal ficam neste dispositivo nesta versão local.
 var athlete=ld(PKEY,null), athleteAccount=null, athleteMatches=ld(LKEY,[]), activePane='score';
-var BRAZIL_STATES=[['AC','Acre'],['AL','Alagoas'],['AP','Amapá'],['AM','Amazonas'],['BA','Bahia'],['CE','Ceará'],['DF','Distrito Federal'],['ES','Espírito Santo'],['GO','Goiás'],['MA','Maranhão'],['MT','Mato Grosso'],['MS','Mato Grosso do Sul'],['MG','Minas Gerais'],['PA','Pará'],['PB','Paraíba'],['PR','Paraná'],['PE','Pernambuco'],['PI','Piauí'],['RJ','Rio de Janeiro'],['RN','Rio Grande do Norte'],['RS','Rio Grande do Sul'],['RO','Rondônia'],['RR','Roraima'],['SC','Santa Catarina'],['SP','São Paulo'],['SE','Sergipe'],['TO','Tocantins']];
+var BRAZIL_STATES=window.PLACARUAI_BRAZIL_STATES;
 function stateFlagFile(code){var state=BRAZIL_STATES.find(function(x){return x[0]===code});if(code==='DF')return'Bandeira do Distrito Federal (Brasil).svg';if(code==='SP')return'Bandeira do estado de São Paulo.svg';return'Flag of '+state[1]+'.svg'}
 function stateFlagMarkup(code){var state=BRAZIL_STATES.find(function(x){return x[0]===code});return'<div class="state-flag" title="Bandeira de '+esc(state[1])+'"><span>'+esc(code)+'</span><img src="https://commons.wikimedia.org/wiki/Special:FilePath/'+encodeURIComponent(stateFlagFile(code))+'?width=128" alt="Bandeira de '+esc(state[1])+'"></div>'}
-function profileDefaults(){return{name:'',nick:'',city:'',state:'GO',favorite:'volei',photo:'',team:'Time do atleta',position:'Atleta',shirt:'',goals:0,assists:0,public:false,side:'A',venue:''}}
+function profileDefaults(){return{name:'',nick:'',phone:'',city:'',state:'GO',favorite:'volei',photo:'',team:'Time do atleta',position:'Atleta',shirt:'',goals:0,assists:0,public:false,side:'A',venue:''}}
 function openAccount(mode){
  if(typeof window.openAccount==='function'&&window.openAccount!==openAccount){window.openAccount(mode);return}
  open('<h2>Conta PlacarUai</h2><p>Autenticação indisponível. Configure ou recarregue a integração Supabase para entrar.</p>',null,null,false);
@@ -638,6 +687,7 @@ function profileForm(){
   '<label class="profile-edit-field">Nome<input id="pfName" maxlength="50" value="'+esc(athlete.name||'')+'" autocomplete="name"></label>'+
   '<label class="profile-edit-field">Apelido<input id="pfNick" maxlength="30" value="'+esc(athlete.nick||'')+'"></label>'+
   '<label class="profile-edit-field">Cidade<input id="pfCity" maxlength="50" value="'+esc(athlete.city||'')+'"></label>'+
+  '<label class="profile-edit-field">Telefone (privado)<input id="pfPhone" type="tel" autocomplete="tel" maxlength="20" value="'+esc(athlete.phone||'')+'"></label>'+
   '<label class="profile-edit-field">Estado<select id="pfState">'+BRAZIL_STATES.map(function(x){return'<option value="'+x[0]+'">'+esc(x[1])+'</option>'}).join('')+'</select></label>'+
   '<label class="profile-edit-field">Modalidade favorita<select id="pfMod"><option value="volei">Vôlei</option><option value="futevolei">Futevôlei</option><option value="beach">Beach tennis</option></select></label>'+
   '<label class="profile-edit-field">Time / equipe<input id="pfTeam" maxlength="35" value="'+esc(athlete.team||'Time do atleta')+'"></label>'+
@@ -653,10 +703,12 @@ function profileForm(){
   '<small>Ajuste o enquadramento exato exibido na moeda.</small></div></div>'+
   '<label class="profile-edit-field full">Ou informe uma foto por endereço<input id="pfPhoto" type="url" value="'+(savedPhoto.indexOf('data:image/')===0?'':esc(savedPhoto))+'" placeholder="https://..."></label>'+
   '<label class="profile-check"><input id="pfPublic" type="checkbox"'+(athlete.public?' checked':'')+'><span>Exibição local do card (não oculta o perfil social)<small class="social-muted">Perfis sociais exibem nome, cidade, modalidade e foto para outros atletas.</small></span></label>'+
+  '<label class="profile-check"><input id="pfHideFollowers" type="checkbox"'+(athlete.hideFollowers?' checked':'')+'><span>Ocultar minha lista de seguidores<small class="social-muted">Outras pessoas verão apenas a quantidade de seguidores.</small></span></label>'+
   '<p id="pfPartnerError" class="profile-edit-error" role="status" aria-live="polite"></p></div>','Salvar',function(){
    athlete.name=personName(document.getElementById('pfName').value)||'Atleta';
    athlete.nick=personName(document.getElementById('pfNick').value);
    athlete.city=document.getElementById('pfCity').value.trim();
+   athlete.phone=document.getElementById('pfPhone').value.trim();
    athlete.state=document.getElementById('pfState').value;
    athlete.favorite=document.getElementById('pfMod').value;
    athlete.team=document.getElementById('pfTeam').value.trim()||'Time do atleta';
@@ -666,6 +718,7 @@ function profileForm(){
    athlete.partnerPublicId=document.getElementById('pfPartnerId').value.trim().toUpperCase();
    athlete.partnerName=matchedPartner&&matchedPartner.display_name||'';
    athlete.public=document.getElementById('pfPublic').checked;
+   athlete.hideFollowers=document.getElementById('pfHideFollowers').checked;
    sv(PKEY,athlete);renderProfile();syncAthleteProfileToCloud();
   });
  dlg.classList.add('profile-edit-dialog');
@@ -734,35 +787,68 @@ function renderProfile(){
  ms.forEach(function(m){points+=(m.A.pts||0)+(m.B.pts||0)});ms.slice().reverse().forEach(function(m){if(m.result==='win'){streak++;maxStreak=Math.max(maxStreak,streak)}else streak=0});
  var overall=ms.length?Math.min(99,Math.round(40+pct*.45+Math.min(maxStreak,10)*1.5+Math.min(ms.length,20)*.4)):0,last=ms[0],venues={};ms.forEach(function(m){if(m.venue)venues[m.venue]=(venues[m.venue]||0)+1});var venue=Object.keys(venues).sort(function(a,b){return venues[b]-venues[a]})[0]||'—';
  var photo=athlete.photo?'<img class="avatar" src="'+esc(athlete.photo)+'" alt="Foto de '+esc(athlete.name)+'">':'<div class="avatar">'+esc((athlete.name||'A').slice(0,1).toUpperCase())+'</div>';
+ var publicId=String(athleteAccount.uaId||'');
  var lastHtml=last?new Date(last.at).toLocaleDateString('pt-BR')+' · '+esc(last.venue||'Local não informado')+'<br><b>'+esc(personName(last.A.name))+' '+esc(last.scoreText||((last.A.pts||0)+' × '+(last.B.pts||0)))+' '+esc(personName(last.B.name))+'</b>':'Jogue sua primeira partida para começar seu card.';
  el.innerHTML='<div class="profile-wrap"><div class="athlete-card" role="button" tabindex="0" aria-label="Abrir medalhão 3D do atleta">'+
- '<div class="athlete-top">'+photo+'<div><h2>'+esc(athlete.name||'Atleta')+'</h2><div class="muted">'+esc(athlete.nick?'@'+athlete.nick:'Atleta PlacarUai')+' · '+esc(athlete.city||'Cidade não informada')+'</div><div class="muted">'+esc(NAMES[athlete.favorite]||'Vôlei')+'</div></div><div class="overall">'+overall+'<small>OVERALL</small>'+stateFlagMarkup(athlete.state)+'</div></div>'+
- '<div class="last-game"><small>ÚLTIMA VEZ QUE JOGOU</small><p>'+lastHtml+'</p></div></div><div class="social-counts profile-social-counts" aria-label="Jogos e conexões sociais"><div class="social-count"><b id="profileSocialGames">—</b><span>Jogos</span></div><button class="social-count" data-social-connection="craques"><b id="profileSocialCraques">—</b><span>Craques</span></button><button class="social-count" data-social-connection="arquibancada"><b id="profileSocialAudience">—</b><span>Arquibancada</span></button></div><div class="stat-grid">'+[['Partidas',ms.length],['Vitórias',wins],['Derrotas',losses],['Aproveitamento',pct+'%'],['Maior sequência',maxStreak],['Pontos marcados',points],['Parceiro frequente',mostPartner(ms,athlete.side)],['Local frequente',venue]].map(function(x){return '<div class="stat"><b>'+esc(x[1])+'</b><small>'+esc(x[0])+'</small></div>'}).join('')+'</div>'+
- '<div class="row"><button id="editProfile">Editar perfil</button><button id="shareProfile" class="go">Compartilhar card</button><button id="accountManage">Conta</button></div><p class="hint">Histórico privado neste dispositivo · '+(athlete.public?'Perfil marcado como público':'Perfil privado')+'</p></div>';
+ '<div class="athlete-card-brand"><span>PLACARUAI · PERFIL DE ATLETA</span>'+stateFlagMarkup(athlete.state)+'</div>'+
+ '<div class="athlete-top">'+photo+'<div class="athlete-meta"><small class="athlete-kicker">Atleta PlacarUai</small><h2>'+esc(athlete.name||'Atleta')+'</h2><div class="muted">'+esc(athlete.nick?'@'+athlete.nick:'Atleta')+' · '+esc(athlete.city||'Cidade não informada')+'</div><span class="sport-chip">'+esc(NAMES[athlete.favorite]||'Vôlei')+'</span><div class="profile-card-actions"><button id="editProfile" type="button">Editar perfil</button><button id="shareProfile" class="go" type="button">Compartilhar card</button></div></div><div class="overall">'+overall+'<small>OVERALL</small></div></div>'+
+ '<div class="last-game"><small>ÚLTIMA VEZ QUE JOGOU</small><p>'+lastHtml+'</p></div></div><div class="profile-public-id"><div><small>SEU ID DE ATLETA</small><strong>'+esc(publicId||'Carregando ID…')+'</strong><span>Compartilhe este código para outros atletas encontrarem seu perfil.</span></div><button id="copyAthleteId" type="button" '+(publicId?'':'disabled')+'>Copiar ID</button></div><div class="social-counts profile-social-counts" aria-label="Jogos e conexões sociais"><div class="social-count"><b id="profileSocialGames">—</b><span>Jogos</span></div><button class="social-count" data-social-connection="following"><b id="profileSocialFollowing">—</b><span>Seguindo</span></button><button class="social-count" data-social-connection="followers"><b id="profileSocialFollowers">—</b><span>Seguidores</span></button></div><div class="stat-grid">'+[['Partidas',ms.length],['Vitórias',wins],['Derrotas',losses],['Aproveitamento',pct+'%'],['Maior sequência',maxStreak],['Pontos marcados',points],['Parceiro frequente',mostPartner(ms,athlete.side)],['Local frequente',venue]].map(function(x){return '<div class="stat"><b>'+esc(x[1])+'</b><small>'+esc(x[0])+'</small></div>'}).join('')+'</div>'+
+ '<p class="hint">Histórico privado neste dispositivo · '+(athlete.public?'Perfil marcado como público':'Perfil privado')+'</p></div>';
  var partnerCard=renderPartnerCard(athlete);
  el.querySelector('.athlete-card').insertAdjacentElement('afterend',partnerCard);
  var card=el.querySelector('.athlete-card'),profileCounts=el.querySelector('.profile-social-counts');if(card&&profileCounts){card.removeAttribute('role');card.removeAttribute('tabindex');card.removeAttribute('aria-label');card.insertBefore(profileCounts,card.querySelector('.last-game'))}
  var visibilityHint=el.querySelector('.profile-wrap > .hint');if(visibilityHint)visibilityHint.textContent='Histórico privado neste dispositivo · Perfil social aberto para busca entre atletas.';
- el.querySelector('#editProfile').onclick=profileForm;el.querySelector('#accountManage').onclick=openAccount;el.querySelector('#shareProfile').onclick=shareAthleteCard;var flagImage=el.querySelector('.state-flag img');flagImage.onerror=function(){this.remove()};flagImage.onload=function(){this.previousElementSibling.classList.add('hide')};var medalButton=card.querySelector('.athlete-top');medalButton.setAttribute('role','button');medalButton.setAttribute('tabindex','0');medalButton.setAttribute('aria-label','Abrir medalhão 3D do atleta');medalButton.onclick=openMedallion;medalButton.onkeydown=function(e){if(e.key==='Enter'||e.key===' '){e.preventDefault();openMedallion()}};
+ el.querySelector('#editProfile').onclick=function(event){event.stopPropagation();profileForm()};el.querySelector('#shareProfile').onclick=function(event){event.stopPropagation();shareAthleteCard()};el.querySelector('#copyAthleteId').onclick=async function(){try{if(navigator.clipboard&&window.isSecureContext)await navigator.clipboard.writeText(publicId);else{var field=document.createElement('textarea');field.value=publicId;field.style.position='fixed';field.style.opacity='0';document.body.appendChild(field);field.select();document.execCommand('copy');field.remove()}this.textContent='Copiado!';var button=this;setTimeout(function(){button.textContent='Copiar ID'},1600)}catch(error){console.error('Unable to copy athlete ID',error);this.textContent='Selecione o ID'}};var flagImage=el.querySelector('.state-flag img');flagImage.onerror=function(){this.remove()};flagImage.onload=function(){this.previousElementSibling.classList.add('hide')};var medalButton=card.querySelector('.athlete-top');medalButton.setAttribute('role','button');medalButton.setAttribute('tabindex','0');medalButton.setAttribute('aria-label','Abrir medalhão 3D do atleta');medalButton.onclick=openMedallion;medalButton.onkeydown=function(e){if(e.target.closest('button'))return;if(e.key==='Enter'||e.key===' '){e.preventDefault();openMedallion()}};
  if(!ownsProfile){el.querySelector('#editProfile').classList.add('hide');el.querySelector('#shareProfile').classList.add('hide')}
- var tournamentButton=document.createElement('button');tournamentButton.className='go';tournamentButton.style.margin='12px 0';tournamentButton.textContent='Gerenciar campeonatos · Plus';tournamentButton.onclick=openTournamentModule;el.querySelector('.profile-wrap').appendChild(tournamentButton);
- el.querySelector('.stat-grid').insertAdjacentHTML('afterend',tournamentProfileSummary(profileEmail));el.querySelector('.profile-wrap').insertAdjacentHTML('beforeend',reviewMarkup(profileEmail,ownsProfile));wireReviews(profileEmail,ownsProfile);
+ el.querySelector('.stat-grid').insertAdjacentHTML('afterend',tournamentProfileSummary(profileEmail));el.querySelector('.profile-wrap').insertAdjacentHTML('beforeend',reviewMarkup(publicId,ownsProfile));mountAthleteReviews(el.querySelector('[data-review-mount]'),publicId);
 }
 function renderPartnerCard(profile){
  var id=String(profile.partnerPublicId||'').trim().toUpperCase(),button=document.createElement('button'),shield=document.createElement('span'),copy=document.createElement('span'),label=document.createElement('small'),name=document.createElement('strong'),note=document.createElement('span');
- button.type='button';button.className='profile-team-card'+(id?'':' empty');shield.className='team-shield';shield.textContent=id?'DU':'+';copy.className='profile-team-card-copy';label.textContent='SUA DUPLA ATUAL';name.textContent=id?(profile.partnerName||id):'Vincule um atleta pelo ID UA';note.textContent=id?'Carregando perfil da dupla...':'Edite seu perfil para adicionar a dupla';copy.append(label,name,note);button.append(shield,copy);
- if(!id){button.onclick=profileForm;return button}
- button.setAttribute('aria-label','Abrir perfil e medalhão de '+id);
- button.onclick=function(){openPartnerMedallion(id)};
+ button.type='button';button.className='profile-team-card'+(id?'':' empty');shield.className='team-shield';shield.textContent=id?'DU':'+';copy.className='profile-team-card-copy';label.textContent='SUA DUPLA ATUAL';name.textContent=id?(profile.partnerName||id):'Vincule um atleta pelo ID UA';note.textContent=id?'Carregando perfil da dupla...':'Toque para inserir o ID do atleta';copy.append(label,name,note);button.append(shield,copy);
+ button.setAttribute('aria-label',id?'Alterar ou consultar o ID da sua dupla':'Inserir o ID do atleta da sua dupla');
+ button.onclick=function(){editPartnerId(id)};
+ if(!id)return button;
  var api=window.placaruaiSocialApi;
  if(api&&api.ready())api.getProfile(id).then(function(result){
   var teammate=Array.isArray(result)?result[0]:result;
   if(!teammate){note.textContent='Perfil não encontrado ou indisponível';return}
   name.textContent=teammate.display_name||id;
-  note.textContent=teammate.public_id+' · '+(teammate.city||'Cidade não informada')+' · Toque para ver o medalhão';
+  note.textContent=teammate.public_id+' · '+(teammate.city||'Cidade não informada')+' · Toque para alterar o ID';
  }).catch(function(error){console.error('Unable to load current teammate profile',error);note.textContent='Não foi possível carregar agora · Toque para tentar novamente'});
- else note.textContent=id+' · Toque para ver o perfil';
+ else if(id)note.textContent=id+' · Toque para alterar o ID';
  return button;
+}
+function editPartnerId(currentId){
+ if(!athleteAccount){openAccount();return}
+ var initialId=String(currentId||'').trim().toUpperCase();
+ open('<h2>Sua dupla atual</h2><p class="hint">Insira o ID UA do atleta. Vamos validar o perfil antes de salvar.</p><label class="lb" for="partnerPublicIdInput">ID do atleta</label><input id="partnerPublicIdInput" maxlength="11" placeholder="UA-XXXXXXXX" value="'+esc(initialId)+'"><p id="partnerPublicIdError" class="hint" role="status" aria-live="polite"></p>'+(initialId?'<button id="viewCurrentPartner" type="button">Ver perfil atual da dupla</button>':'')+'<p class="hint">Deixe o campo vazio para remover a dupla atual.</p>','Salvar',function(){return false},'Cancelar');
+ var input=document.getElementById('partnerPublicIdInput'),message=document.getElementById('partnerPublicIdError'),saveButton=document.getElementById('dok'),checkButton=document.createElement('button');
+ checkButton.type='button';checkButton.textContent='Validar ID';checkButton.style.marginTop='8px';input.insertAdjacentElement('afterend',checkButton);
+ async function findPartner(){
+  var id=input.value.trim().toUpperCase();input.value=id;
+  if(!id){message.textContent='';return null}
+  if(!/^UA-[A-Z0-9]{4,8}$/.test(id)){message.textContent='Informe um ID no formato UA-XXXXXXXX.';return null}
+  var api=window.placaruaiSocialApi;
+  if(!api||!api.ready()){message.textContent='Entre na sua conta para validar o ID.';return null}
+  message.textContent='Validando ID...';
+  try{
+   var result=await api.getProfile(id),partner=Array.isArray(result)?result[0]:result;
+   if(!partner){message.textContent='ID não encontrado ou perfil indisponível.';return null}
+   if(partner.is_self||id===String(athleteAccount.uaId||'').toUpperCase()){message.textContent='Informe o ID de outro atleta, não o seu próprio ID.';return null}
+   message.textContent='Atleta encontrado: '+(partner.display_name||partner.public_id)+' · '+partner.public_id;
+   return partner;
+  }catch(error){console.error('Unable to validate teammate ID',error);message.textContent='Não foi possível validar agora. Verifique a conexão e tente novamente.';return null}
+ }
+ checkButton.onclick=findPartner;input.addEventListener('keydown',function(event){if(event.key==='Enter'){event.preventDefault();findPartner()}});
+ input.addEventListener('input',function(){message.textContent=''});
+ var viewButton=document.getElementById('viewCurrentPartner');if(viewButton)viewButton.onclick=function(){dlg.close();openPartnerMedallion(initialId)};
+ saveButton.onclick=async function(){
+  var id=input.value.trim().toUpperCase(),partner=null;
+  if(id){partner=await findPartner();if(!partner)return}
+  athlete=athlete||profileDefaults();athlete.partnerPublicId=partner?partner.public_id:'';athlete.partnerName=partner?partner.display_name||'':'';
+  sv(PKEY,athlete);dlg.close();renderProfile();syncAthleteProfileToCloud();
+ };
+ input.focus();
 }
 async function openPartnerMedallion(publicId){
  var api=window.placaruaiSocialApi;
@@ -774,15 +860,43 @@ async function openPartnerMedallion(publicId){
  }catch(error){console.error('Unable to open teammate profile',error);var status=document.getElementById('st');status.textContent='Não foi possível abrir o perfil da dupla. Verifique a conexão e tente novamente.';status.classList.remove('hide')}
 }
 function reviewMarkup(target,owns){
- var all=ld(FBKEY,[]).filter(function(x){return x.target===target}),avg=all.length?all.reduce(function(n,x){return n+x.rating},0)/all.length:0,visible=all.slice(-4),bubbles=visible.map(function(x,i){var left=i%2?53:3,top=10+Math.floor(i/2)*94;return '<div class="review-bubble" style="left:'+left+'%;top:'+top+'px"><strong>'+esc(x.authorName)+' · '+'★'.repeat(x.rating)+'</strong>'+esc(x.comment)+'</div>'}).join('');
- var form=owns?'<div class="review-lock">A validação precisa ser feita por outro atleta conectado.</div>':'<form class="review-form" id="reviewForm"><b>Validar este atleta</b><div class="rating-pick" role="radiogroup" aria-label="Nota de 1 a 5 estrelas">'+[1,2,3,4,5].map(function(n){return '<button type="button" data-rate="'+n+'" aria-label="'+n+' estrelas">★</button>'}).join('')+'<small id="ratingLabel">Escolha de 1 a 5</small></div><textarea id="reviewText" maxlength="180" placeholder="Conte como foi jogar com este atleta" required></textarea><button class="go" type="submit">Enviar validação</button></form>';
- return '<section class="reviews"><div class="reviews-head"><div><h3>Comentários e validações</h3><small class="hint">Impressões de outros atletas</small></div><div class="review-average">'+(all.length?avg.toFixed(1)+' ★':'— ★')+'<small style="display:block;color:var(--mut)">'+all.length+' validações</small></div></div><div class="bubble-field" aria-label="Comentários flutuantes">'+(bubbles||'<div class="review-empty">Ainda sem comentários.<br>Convide outro atleta para deixar uma validação.</div>')+'</div>'+form+'</section>';
+ return '<section class="reviews" data-review-mount data-public-id="'+esc(target)+'"><div class="reviews-head"><div><span class="section-kicker">COMUNIDADE</span><h3>Coment&aacute;rios dos atletas</h3><small class="hint">Avalia&ccedil;&otilde;es aparecem no perfil somente depois da sua aprova&ccedil;&atilde;o.</small></div></div><div data-review-content><p class="review-loading">Carregando coment&aacute;rios...</p></div></section>';
 }
-function wireReviews(target,owns){
- if(owns)return;var form=document.getElementById('reviewForm'),rating=0;if(!form)return;
- form.querySelectorAll('[data-rate]').forEach(function(b){b.onclick=function(){rating=Number(b.dataset.rate);form.querySelectorAll('[data-rate]').forEach(function(x){x.classList.toggle('selected',Number(x.dataset.rate)<=rating);x.setAttribute('aria-checked',Number(x.dataset.rate)===rating)});document.getElementById('ratingLabel').textContent=rating+' de 5 estrelas'}});
- form.onsubmit=function(e){e.preventDefault();var comment=document.getElementById('reviewText').value.trim();if(!rating){document.getElementById('ratingLabel').textContent='Selecione uma nota para validar';return}if(!comment)return;var data=ld(FBKEY,[]),existing=data.findIndex(function(x){return x.target===target&&x.authorEmail===athleteAccount.email});var item={id:Date.now(),target:target,authorEmail:athleteAccount.email,authorName:athleteAccount.email.split('@')[0],rating:rating,comment:comment,at:new Date().toISOString()};if(existing>-1)data[existing]=item;else data.push(item);sv(FBKEY,data);renderProfile()};
+function mountAthleteReviews(container,publicId){
+ var api=window.placaruaiSocialApi;
+ if(!container||!publicId)return;
+ if(!container.hasAttribute('data-review-mount'))container.innerHTML=reviewMarkup(publicId,false);
+ var target=container.hasAttribute('data-review-mount')?container:container.querySelector('[data-review-mount]');
+ var notice='';
+ function load(){
+  if(!api||!api.ready()){
+   target.querySelector('[data-review-content]').innerHTML='<p class="review-message">Entre na sua conta para ver e enviar coment&aacute;rios.</p>';
+   return;
+  }
+  Promise.all([api.getProfileReviews(publicId).catch(function(error){console.error('Unable to load athlete review list',error);return{reviews:[],reviews_hidden:false,is_owner:false,unavailable:true}}),api.getProfile(publicId)]).then(function(result){
+   var data=result[0]||{},profile=Array.isArray(result[1])?result[1][0]:result[1]||{},items=Array.isArray(data.reviews)?data.reviews:[],owner=data.is_owner===true||profile.is_self===true,hidden=data.reviews_hidden===true,content=target.querySelector('[data-review-content]');
+   var html=data.unavailable?'<p class="review-message">A lista precisa da migra&ccedil;&atilde;o de coment&aacute;rios do Supabase. Voc&ecirc; ainda pode escrever e avaliar.</p>':'';
+   html+='<div class="review-toolbar">'+(owner&&!data.unavailable?'<div><b>'+(hidden?'Somente voc&ecirc; pode ver os coment&aacute;rios':'Coment&aacute;rios vis&iacute;veis no perfil')+'</b><small>'+(hidden?'As outras pessoas n&atilde;o veem as avalia&ccedil;&otilde;es.':'Voc&ecirc; pode ocultar a lista quando quiser.')+'</small></div><button type="button" class="review-privacy" data-review-privacy aria-pressed="'+String(hidden)+'">'+(hidden?'Mostrar no perfil':'Ocultar para todos')+'</button>':'')+'</div>';
+   if(hidden&&!owner)html+='<p class="review-message">Este atleta optou por manter os coment&aacute;rios privados.</p>';
+   else if(items.length){
+    html+='<div class="review-list">'+items.map(function(item){var stars='\u2605'.repeat(Number(item.rating)||0);return '<article class="review-entry"><div class="review-entry-head"><div><b>'+esc(item.author_name||'Atleta')+'</b><small>ID '+esc(item.author_public_id||'')+'</small></div><span class="review-stars" aria-label="Nota '+esc(item.rating)+' de 5">'+stars+'</span></div><p>'+esc(item.comment)+'</p><div class="review-entry-foot"><span>'+(item.approved?'Aprovado':'Aguardando sua aprova&ccedil;&atilde;o')+'</span>'+(owner?'<div class="review-moderation">'+(!item.approved?'<button type="button" data-review-action="approve" data-review-id="'+esc(item.id)+'">Aprovar</button>':'')+'<button type="button" data-review-action="delete" data-review-id="'+esc(item.id)+'">Remover</button></div>':'')+'</div></article>'}).join('')+'</div>';
+   }else html+='<p class="review-message">Ainda n&atilde;o h&aacute; coment&aacute;rios para este atleta.</p>';
+   if(!owner){
+    html+='<form class="review-form"><label class="review-form-label" for="reviewText">Deixe um coment&aacute;rio</label><div class="rating-pick" role="radiogroup" aria-label="Escolha uma nota de 1 a 5 estrelas">'+[1,2,3,4,5].map(function(n){return '<button type="button" role="radio" aria-checked="false" data-rate="'+n+'" aria-label="'+n+' estrelas">&#9733;</button>'}).join('')+'<small data-rating-label>Escolha as estrelas</small></div><textarea id="reviewText" maxlength="300" placeholder="Conte sua experi&ecirc;ncia com este atleta" required></textarea><span class="review-suggestions-label">Ideias positivas para come&ccedil;ar</span><div class="review-suggestions">'+['Foi uma &oacute;tima dupla, parceira e respeitosa.','Joga com dedica&ccedil;&atilde;o e mant&eacute;m uma atitude positiva.','&Eacute; uma pessoa confi&aacute;vel e incentiva toda a equipe.'].map(function(text,index){return '<button type="button" data-review-suggestion="'+index+'">'+text+'</button>'}).join('')+'</div><p class="review-message" data-review-message role="status">'+esc(notice)+'</p><button class="go review-submit" type="submit">Enviar para aprova&ccedil;&atilde;o</button></form>';
+   }else if(notice)html+='<p class="review-message" role="status">'+esc(notice)+'</p>';
+   content.innerHTML=html;
+   var form=content.querySelector('.review-form'),rating=0;
+   content.querySelectorAll('[data-review-privacy]').forEach(function(button){button.onclick=function(){button.disabled=true;api.setProfileReviewsHidden(!hidden).then(function(){notice=hidden?'Os coment\u00e1rios voltaram a aparecer no perfil.':'Os coment\u00e1rios agora ficam vis\u00edveis somente para voc\u00ea.';load()}).catch(function(error){button.disabled=false;notice='N\u00e3o foi poss\u00edvel atualizar a privacidade: '+(error.message||'tente novamente.');load()})}});
+   content.querySelectorAll('[data-review-action]').forEach(function(button){button.onclick=function(){button.disabled=true;api.moderateProfileReview(button.dataset.reviewId,button.dataset.reviewAction).then(function(){notice=button.dataset.reviewAction==='approve'?'Coment\u00e1rio aprovado e publicado no perfil.':'Coment\u00e1rio removido.';load()}).catch(function(error){button.disabled=false;notice='N\u00e3o foi poss\u00edvel atualizar o coment\u00e1rio: '+(error.message||'tente novamente.');load()})}});
+   if(!form)return;
+   form.querySelectorAll('[data-rate]').forEach(function(button){button.onclick=function(){rating=Number(button.dataset.rate);form.querySelectorAll('[data-rate]').forEach(function(star){star.classList.toggle('selected',Number(star.dataset.rate)<=rating);star.setAttribute('aria-checked',String(Number(star.dataset.rate)===rating))});form.querySelector('[data-rating-label]').textContent=rating+' de 5 estrelas'}});
+   form.querySelectorAll('[data-review-suggestion]').forEach(function(button){button.onclick=function(){var suggestions=['Foi uma \u00f3tima dupla, parceira e respeitosa.','Joga com dedica\u00e7\u00e3o e mant\u00e9m uma atitude positiva.','\u00c9 uma pessoa confi\u00e1vel e incentiva toda a equipe.'];form.querySelector('#reviewText').value=suggestions[Number(button.dataset.reviewSuggestion)]||'';form.querySelector('#reviewText').focus()}});
+   form.onsubmit=function(event){event.preventDefault();var comment=form.querySelector('#reviewText').value.trim(),message=form.querySelector('[data-review-message]'),submit=form.querySelector('.review-submit');if(!rating){message.textContent='Escolha uma nota de 1 a 5 estrelas.';return}if(!comment){message.textContent='Escreva um coment\u00e1rio antes de enviar.';return}submit.disabled=true;submit.textContent='Enviando...';api.submitProfileReview(publicId,rating,comment).then(function(){notice='Coment\u00e1rio enviado. Ele ficar\u00e1 vis\u00edvel depois que o atleta aprovar.';load()}).catch(function(error){submit.disabled=false;submit.textContent='Enviar para aprova&ccedil;&atilde;o';message.textContent=error&&error.code==='PGRST202'?'A fun\u00e7\u00e3o de coment\u00e1rios ainda n\u00e3o est\u00e1 ativa no Supabase.':'N\u00e3o foi poss\u00edvel enviar agora. Confira sua conex\u00e3o e tente novamente.'})};
+  }).catch(function(error){console.error('Unable to load athlete profile reviews',error);target.querySelector('[data-review-content]').innerHTML='<p class="review-message">N&atilde;o foi poss&iacute;vel carregar os coment&aacute;rios. Verifique se as migra&ccedil;&otilde;es do Supabase est&atilde;o atualizadas.</p>'});
+ }
+ load();
 }
+window.mountAthleteReviews=mountAthleteReviews;
 var currentTourId=null,tourTab='overview';
 function tourAllowed(){return window.placaruaiCanManage===true}
 function openTournamentModule(){var d=document.getElementById('tourDialog');d.showModal();if(tourAllowed())renderTourManager();else renderTourGate()}
@@ -968,7 +1082,7 @@ function openMedallion(profileOverride){
   var sport=profileOverride.sports&&profileOverride.sports[0]||'Vôlei',photo=profileOverride.photo_url||'',name=profileOverride.display_name||'Atleta',city=profileOverride.city||'Cidade não informada';
   var src=photo?'<img class="medal-player" src="'+esc(photo)+'" alt="Foto de '+esc(name)+'">':'<div class="medal-player medal-initial">'+esc(name.slice(0,1).toUpperCase())+'</div>';
   var coin='<div class="medal-arrive"><div class="medal-coin"><div class="medal-face">'+src+'<i class="medal-light"></i></div><div class="medal-face back"><span class="medal-initial">✦</span></div></div></div>';
-  var remoteStats=[['Jogos',profileOverride.games_count||0],['Craques',profileOverride.craques_count||0],['Arquibancada',profileOverride.arquibancada_count||0]];
+  var remoteStats=[['Jogos',profileOverride.games_count||0],['Seguindo',profileOverride.following_count||0],['Seguidores',profileOverride.followers_count||0]];
   var remoteNote=(profileOverride.public_id||'')+' · '+(Array.isArray(profileOverride.sports)?profileOverride.sports.join(' · '):sport||'Modalidade não informada');
   var remoteDialog=document.getElementById('medalDialog');
   remoteDialog.innerHTML='<button class="medal-close" aria-label="Fechar">✕</button><div class="medal-scene">'+coin+'<div class="medal-info"><h2>'+esc(name)+'</h2><div class="medal-team"><span class="team-shield">DU</span>Dupla atual · '+esc(city)+'</div><p>ID do atleta · '+esc(profileOverride.public_id||'')+'</p><div class="medal-stats">'+remoteStats.map(function(s){return'<div class="medal-stat"><b>'+esc(s[1])+'</b><small>'+esc(s[0])+'</small></div>'}).join('')+'</div><p class="medal-note">'+esc(remoteNote)+'</p></div></div>';
@@ -985,10 +1099,171 @@ function showMedallionDialog(d){
  d.querySelector('.medal-close').onclick=function(){d.close()};d.onclick=function(e){if(e.target===d)d.close()};d.showModal();
  var scene=d.querySelector('.medal-scene');scene.onpointermove=function(e){var r=scene.getBoundingClientRect(),px=(e.clientX-r.left-r.width/2)/r.width*12,py=(e.clientY-r.top-r.height/2)/r.height*12;d.querySelector('.medal-coin').style.translate=px+'px '+py+'px'};scene.onpointerleave=function(){var coin=d.querySelector('.medal-coin');if(coin)coin.style.translate='0 0'};
 }
+function loadCardImage(source){
+ return new Promise(function(resolve){
+  if(!source){resolve(null);return}
+  var image=new Image();
+  if(/^https?:\/\//i.test(source))image.crossOrigin='anonymous';
+  image.onload=function(){resolve(image)};
+  image.onerror=function(){resolve(null)};
+  image.src=source;
+ });
+}
+function roundedCardRect(context,x,y,width,height,radius){
+ context.beginPath();
+ context.moveTo(x+radius,y);
+ context.lineTo(x+width-radius,y);
+ context.quadraticCurveTo(x+width,y,x+width,y+radius);
+ context.lineTo(x+width,y+height-radius);
+ context.quadraticCurveTo(x+width,y+height,x+width-radius,y+height);
+ context.lineTo(x+radius,y+height);
+ context.quadraticCurveTo(x,y+height,x,y+height-radius);
+ context.lineTo(x,y+radius);
+ context.quadraticCurveTo(x,y,x+radius,y);
+ context.closePath();
+}
+function showAthleteCardPreview(blob){
+ var dialog=document.getElementById('shareDialog');
+ if(dialog.__previewUrl)URL.revokeObjectURL(dialog.__previewUrl);
+ var previewUrl=URL.createObjectURL(blob);dialog.__previewUrl=previewUrl;
+ dialog.innerHTML='<div class="share-dialog-head"><h2>Seu card · 9:16</h2><button class="share-dialog-close" type="button" aria-label="Fechar">✕</button></div><div class="share-dialog-preview"><img src="'+previewUrl+'" alt="Prévia vertical do card de atleta"></div><div class="share-dialog-actions"><button class="go" type="button" data-share-image>Compartilhar</button><button type="button" data-download-image>Baixar imagem</button></div>';
+ dialog.querySelector('.share-dialog-close').onclick=function(){dialog.close()};
+ dialog.onclick=function(event){if(event.target===dialog)dialog.close()};
+ dialog.onclose=function(){if(dialog.__previewUrl){URL.revokeObjectURL(dialog.__previewUrl);dialog.__previewUrl=''}};
+ dialog.querySelector('[data-share-image]').onclick=async function(){
+  var file=typeof File==='function'?new File([blob],'placaruai-perfil.png',{type:'image/png'}):null;
+  try{
+   if(file&&navigator.share&&navigator.canShare&&navigator.canShare({files:[file]}))await navigator.share({files:[file],title:'Meu card PlacarUai'});
+   else downloadAthleteCard(blob);
+  }catch(error){if(error.name!=='AbortError'){console.error('Unable to share athlete card',error);reportCardShareError('Não foi possível compartilhar a imagem. Você ainda pode baixá-la pelo botão abaixo.')}}
+ };
+ dialog.querySelector('[data-download-image]').onclick=function(){downloadAthleteCard(blob)};
+ dialog.showModal();
+}
+function downloadAthleteCard(blob){
+ var link=document.createElement('a');link.download='placaruai-perfil.png';link.href=URL.createObjectURL(blob);link.click();
+ window.setTimeout(function(){URL.revokeObjectURL(link.href)},1000);
+}
 function shareAthleteCard(){
- var name=athlete.name||'Atleta',nick=athlete.nick?'@'+athlete.nick:'PlacarUai',ms=athleteMatches.filter(function(m){return m.email===athleteAccount.email}),w=ms.filter(function(m){return m.result==='win'}).length,loss=ms.filter(function(m){return m.result==='loss'}).length,pct=ms.length?Math.round(w/ms.length*100):0;
- var c=document.createElement('canvas');c.width=900;c.height=1200;var x=c.getContext('2d'),g=x.createLinearGradient(0,0,900,1200);g.addColorStop(0,'#071426');g.addColorStop(.55,'#123a64');g.addColorStop(1,'#101923');x.fillStyle=g;x.fillRect(0,0,900,1200);x.strokeStyle='#d6b75b';x.lineWidth=5;x.strokeRect(28,28,844,1144);x.fillStyle='#e7cb76';x.font='bold 34px Arial';x.fillText('PLACARUAI  ·  ATLETA',70,95);x.fillStyle='#f3f6fb';x.font='bold 62px Arial';x.fillText(name.slice(0,22),70,215);x.fillStyle='#b5c4d5';x.font='32px Arial';x.fillText(nick+'  ·  '+(athlete.city||'Brasil'),70,270);x.fillStyle='#e7cb76';x.font='bold 150px Arial';x.fillText(String(Math.min(99,Math.round(40+pct*.45+Math.min(ms.length,20)*.4))),70,470);x.font='bold 24px Arial';x.fillText('OVERALL',78,515);x.fillStyle='#fff';x.font='bold 36px Arial';x.fillText((NAMES[athlete.favorite]||'Vôlei').toUpperCase(),70,610);x.fillStyle='#d6b75b';x.fillRect(70,660,760,2);x.fillStyle='#fff';x.font='bold 34px Arial';x.fillText('PARTIDAS     VITÓRIAS     DERROTAS',70,740);x.font='bold 58px Arial';x.fillText(ms.length+'                 '+w+'                 '+loss,70,825);x.fillStyle='#b5c4d5';x.font='28px Arial';x.fillText('Aproveitamento: '+pct+'%  ·  '+new Date().toLocaleDateString('pt-BR'),70,920);x.font='24px Arial';x.fillText('Seu jogo, sua história.',70,1100);
- c.toBlob(function(blob){if(!blob)return;var file=new File([blob],'placaruai-perfil.png',{type:'image/png'});if(navigator.canShare&&navigator.canShare({files:[file]}))navigator.share({files:[file],title:'Meu card PlacarUai'}).catch(function(){});else{var a=document.createElement('a');a.download='placaruai-perfil.png';a.href=URL.createObjectURL(blob);a.click();setTimeout(function(){URL.revokeObjectURL(a.href)},1000)}},'image/png');
+ var name=athlete.name||'Atleta',nick=athlete.nick?'@'+athlete.nick:'Atleta PlacarUai';
+ var state=BRAZIL_STATES.find(function(item){return item[0]===athlete.state})||BRAZIL_STATES.find(function(item){return item[0]==='GO'});
+ var ms=athleteMatches.filter(function(m){return m.email===athleteAccount.email});
+ var wins=ms.filter(function(m){return m.result==='win'}).length;
+ var losses=ms.filter(function(m){return m.result==='loss'}).length;
+ var percentage=ms.length?Math.round(wins/ms.length*100):0;
+ var currentStreak=0;
+ ms.slice().reverse().forEach(function(match){if(match.result==='win')currentStreak++;else currentStreak=0});
+ var overall=ms.length?Math.min(99,Math.round(40+percentage*.45+
+   Math.min(currentStreak,10)*1.5+Math.min(ms.length,20)*.4)):0;
+ var flagSource='https://commons.wikimedia.org/wiki/Special:FilePath/'+
+   encodeURIComponent(stateFlagFile(state[0]))+'?width=256';
+ Promise.all([loadCardImage(athlete.photo),loadCardImage(flagSource)]).then(function(images){
+  if(athlete.photo&&!images[0]){
+   reportCardShareError('Não foi possível carregar a foto do perfil para o card. Confira a imagem e tente compartilhar novamente.');
+  }else if(!images[1]){
+   reportCardShareError('Não foi possível carregar a bandeira do estado. O card exibirá a sigla do estado.');
+  }
+  var canvas=document.createElement('canvas');
+  canvas.width=1080;canvas.height=1920;
+  var context=canvas.getContext('2d');
+  if(!context)throw new Error('Canvas 2D context is unavailable');
+  var gradient=context.createLinearGradient(0,0,1080,1920);
+  gradient.addColorStop(0,'#202820');gradient.addColorStop(.5,'#151c1d');gradient.addColorStop(1,'#0c100e');
+  context.fillStyle=gradient;context.fillRect(0,0,canvas.width,canvas.height);
+  var glow=context.createRadialGradient(840,120,20,840,120,570);
+  glow.addColorStop(0,'#c3e98e30');glow.addColorStop(1,'#c3e98e00');
+  context.fillStyle=glow;context.fillRect(0,0,canvas.width,canvas.height);
+  roundedCardRect(context,30,30,1020,1860,38);
+  context.strokeStyle='#c3e98e';context.lineWidth=3;context.stroke();
+  roundedCardRect(context,46,46,988,1828,28);
+  context.strokeStyle='#ffffff18';context.lineWidth=1;context.stroke();
+
+  context.textAlign='left';context.fillStyle='#c3e98e';context.font='800 28px Inter,Arial,sans-serif';
+  context.fillText('PLACARUAI',84,112);
+  context.textAlign='right';context.fillStyle='#aab5a8';context.font='700 18px Inter,Arial,sans-serif';
+  context.fillText('PERFIL DE ATLETA',996,110);
+
+  var photoX=540,photoY=500,photoRadius=184;
+  context.beginPath();context.arc(photoX,photoY,photoRadius+12,0,Math.PI*2);
+  context.fillStyle='#c3e98e';context.fill();
+  context.beginPath();context.arc(photoX,photoY,photoRadius,0,Math.PI*2);context.save();context.clip();
+  if(images[0]){
+   var scale=Math.max(photoRadius*2/images[0].naturalWidth,photoRadius*2/images[0].naturalHeight);
+   var imageWidth=images[0].naturalWidth*scale,imageHeight=images[0].naturalHeight*scale;
+   context.drawImage(images[0],photoX-imageWidth/2,photoY-imageHeight/2,imageWidth,imageHeight);
+  }else{
+   var avatarGradient=context.createLinearGradient(photoX-photoRadius,photoY-photoRadius,photoX+photoRadius,photoY+photoRadius);
+   avatarGradient.addColorStop(0,'#344739');avatarGradient.addColorStop(1,'#171d18');
+   context.fillStyle=avatarGradient;context.fillRect(photoX-photoRadius,photoY-photoRadius,photoRadius*2,photoRadius*2);
+   context.fillStyle='#c3e98e';context.textAlign='center';context.textBaseline='middle';
+   context.font='800 142px Inter,Arial,sans-serif';context.fillText(name.slice(0,1).toLocaleUpperCase('pt-BR'),photoX,photoY);
+  }
+  context.restore();
+
+  var badgeX=700,badgeY=640,badgeSize=124;
+  context.beginPath();context.arc(badgeX,badgeY,badgeSize/2+9,0,Math.PI*2);
+  context.fillStyle='#151c1d';context.fill();context.strokeStyle='#c3e98e';context.lineWidth=4;context.stroke();
+  context.save();context.beginPath();context.arc(badgeX,badgeY,badgeSize/2,0,Math.PI*2);context.clip();
+  if(images[1])context.drawImage(images[1],badgeX-badgeSize/2,badgeY-badgeSize/2,badgeSize,badgeSize);
+  else{context.fillStyle='#27362a';context.fillRect(badgeX-badgeSize/2,badgeY-badgeSize/2,badgeSize,badgeSize);context.fillStyle='#e8efeb';context.font='800 34px Inter,Arial,sans-serif';context.textAlign='center';context.textBaseline='middle';context.fillText(state[0],badgeX,badgeY)}
+  context.restore();
+
+  context.textAlign='center';context.textBaseline='alphabetic';
+  context.fillStyle='#f4f6f1';context.font='800 64px Inter,Arial,sans-serif';
+  context.fillText(name,540,790,900);
+  context.fillStyle='#aab5a8';context.font='500 27px Inter,Arial,sans-serif';
+  context.fillText(nick+'  ·  '+(athlete.city||'Brasil')+' / '+state[0],540,844,900);
+  roundedCardRect(context,364,888,352,64,32);context.fillStyle='#c3e98e16';context.fill();
+  context.strokeStyle='#c3e98e65';context.lineWidth=2;context.stroke();
+  context.fillStyle='#e3eddb';context.font='750 23px Inter,Arial,sans-serif';
+  context.fillText(NAMES[athlete.favorite]||'Vôlei',540,928);
+
+  roundedCardRect(context,82,1050,916,330,24);context.fillStyle='#ffffff08';context.fill();
+  context.strokeStyle='#ffffff18';context.lineWidth=2;context.stroke();
+  context.fillStyle='#c3e98e';context.font='800 25px Inter,Arial,sans-serif';
+  context.fillText(String(overall),540,1160);
+  context.fillStyle='#aab5a8';context.font='700 15px Inter,Arial,sans-serif';
+  context.fillText('OVERALL',540,1190);
+  context.strokeStyle='#ffffff20';context.lineWidth=2;context.beginPath();context.moveTo(132,1220);context.lineTo(948,1220);context.stroke();
+  [
+   {x:265,label:'PARTIDAS',value:ms.length},
+   {x:540,label:'VITÓRIAS',value:wins},
+   {x:815,label:'DERROTAS',value:losses},
+  ].forEach(function(stat){
+   context.fillStyle='#f4f6f1';context.font='800 43px Inter,Arial,sans-serif';
+   context.fillText(String(stat.value),stat.x,1310);
+   context.fillStyle='#aab5a8';context.font='700 15px Inter,Arial,sans-serif';
+   context.fillText(stat.label,stat.x,1344);
+  });
+  context.fillStyle='#aab5a8';context.font='500 21px Inter,Arial,sans-serif';
+  context.fillText('Aproveitamento de '+percentage+'%  ·  '+new Date().toLocaleDateString('pt-BR'),540,1460);
+  context.fillStyle='#c3e98e';context.font='800 21px Inter,Arial,sans-serif';
+  context.fillText('SEU JOGO. SUA HISTÓRIA.',540,1760);
+
+  try{
+   canvas.toBlob(function(blob){
+    try{
+     if(!blob){reportCardShareError('Não foi possível gerar a imagem do card neste dispositivo.');return}
+     showAthleteCardPreview(blob);
+    }catch(error){
+     console.error('Unable to save athlete share card',error);
+     reportCardShareError('Não foi possível salvar o card. Tente novamente.');
+    }
+   },'image/png');
+  }catch(error){
+   console.error('Unable to generate athlete share card',error);
+   reportCardShareError('Não foi possível gerar o card. Verifique a foto e tente novamente.');
+  }
+ }).catch(function(error){
+  console.error('Unable to render athlete share card',error);
+  reportCardShareError('Não foi possível preparar o card para compartilhar.');
+ });
+}
+function reportCardShareError(message){
+ var status=document.getElementById('st');
+ status.textContent=message;
+ status.classList.remove('hide');
+ window.setTimeout(function(){status.classList.add('hide')},7000);
 }
 function mostPartner(ms,side){var tally={};ms.forEach(function(m){var n=m[side==='A'?'B':'A'].name;if(n&&n!== 'Dupla '+(side==='A'?'B':'A'))tally[n]=(tally[n]||0)+1});return Object.keys(tally).sort(function(a,b){return tally[b]-tally[a]})[0]||'—'}
 function showAthleteHistory(){
@@ -1019,12 +1294,12 @@ else if(landscapeQuery.addListener)landscapeQuery.addListener(adaptNavigationToO
 document.getElementById('end').onclick=function(){
  var a=S.A,b=S.B,scoreText=bt()?a.sets+' × '+b.sets+(S.hs.length?' ('+S.hs.join(', ')+')':''):a.pts+' × '+b.pts;open('<h2>Terminar partida?</h2><p>'+esc(personName(a.name))+' '+esc(scoreText)+' '+esc(personName(b.name))+'</p>'+(athleteAccount?'<label class="lb">Quadra ou local</label><input id="matchVenue" maxlength="70" placeholder="Nome da quadra" value="'+esc(athlete&&athlete.venue||'')+'"><label class="lb">Parceiro (opcional)</label><input id="matchPartner" maxlength="50" placeholder="Nome do parceiro">':'')+'<p class="hint">A partida será salva no histórico e o placar volta para 0.</p>','Terminar e salvar',function(){
   var h=ld(HKEY,[]),record={id:Date.now(),at:new Date().toISOString(),mod:S.mod,A:JSON.parse(JSON.stringify(a)),B:JSON.parse(JSON.stringify(b)),scoreText:scoreText,hs:S.hs.slice()};h.unshift(record);sv(HKEY,h);
-  if(athleteAccount){var side=athlete&&athlete.side||'A',winner=S.win,result=winner?(winner===side?'win':'loss'):'unrated',venue=document.getElementById('matchVenue').value.trim(),partner=document.getElementById('matchPartner').value.trim();athlete=athlete||profileDefaults();if(venue)athlete.venue=venue;record.email=athleteAccount.email;record.result=result;record.venue=venue;record.partner=partner;record.localDate=new Date().toISOString();athleteMatches.unshift(record);sv(LKEY,athleteMatches);sv(PKEY,athlete);var socialApi=window.placaruaiSocialApi;if(socialApi&&socialApi.ready()){var invitees=window.selectedMatchInvitees?window.selectedMatchInvitees(dlg):[];socialApi.submitMatch(record,invitees).then(function(){var status=document.getElementById('st');status.textContent=invitees.length?'Partida salva e convites enviados; ela aparecerá na arquibancada após as respostas.':'Partida salva e compartilhada com seus Craques.';status.classList.remove('hide');window.setTimeout(function(){status.classList.add('hide')},7000)}).catch(function(error){console.error('Unable to publish social match',error);var status=document.getElementById('st');status.textContent='Partida salva no histórico local, mas não foi compartilhada. Verifique a migração social do Supabase.';status.classList.remove('hide');window.setTimeout(function(){status.classList.add('hide')},7000)})}}
+  if(athleteAccount){var side=athlete&&athlete.side||'A',winner=S.win,result=winner?(winner===side?'win':'loss'):'unrated',venue=document.getElementById('matchVenue').value.trim(),partner=document.getElementById('matchPartner').value.trim();athlete=athlete||profileDefaults();if(venue)athlete.venue=venue;record.email=athleteAccount.email;record.result=result;record.venue=venue;record.partner=partner;record.localDate=new Date().toISOString();athleteMatches.unshift(record);sv(LKEY,athleteMatches);sv(PKEY,athlete);var socialApi=window.placaruaiSocialApi;if(socialApi&&socialApi.ready()){var invitees=window.selectedMatchInvitees?window.selectedMatchInvitees(dlg):[];socialApi.submitMatch(record,invitees).then(function(){var status=document.getElementById('st');status.textContent=invitees.length?'Partida salva e convites enviados; ela aparecerá para seus seguidores após as respostas.':'Partida salva e compartilhada com seus seguidores.';status.classList.remove('hide');window.setTimeout(function(){status.classList.add('hide')},7000)}).catch(function(error){console.error('Unable to publish social match',error);var status=document.getElementById('st');status.textContent='Partida salva no histórico local, mas não foi compartilhada. Verifique a migração social do Supabase.';status.classList.remove('hide');window.setTimeout(function(){status.classList.add('hide')},7000)})}}
   whistle();fresh();render();
  });
  if(athleteAccount&&window.placaruaiSocialApi&&window.placaruaiSocialApi.ready()){
   var dialogActions=dlg.querySelector('.row'),inviteSection=document.createElement('section');
-  inviteSection.innerHTML='<label class="lb" for="matchInviteSearch">Convidar atletas da partida (opcional)</label><input id="matchInviteSearch" type="search" maxlength="80" placeholder="Buscar por nome ou ID"><div id="matchInviteSelected"></div><div id="matchInviteResults" class="match-invite-results"></div><p class="hint">A partida só aparece para a Arquibancada depois que os atletas responderem.</p>';
+  inviteSection.innerHTML='<label class="lb" for="matchInviteSearch">Convidar atletas da partida (opcional)</label><input id="matchInviteSearch" type="search" maxlength="80" placeholder="Buscar por nome ou ID"><div id="matchInviteSelected"></div><div id="matchInviteResults" class="match-invite-results"></div><p class="hint">A partida aparece para seus seguidores depois que os atletas responderem.</p>';
   dialogActions.before(inviteSection);
  }
  if(athleteAccount&&window.setupMatchInvitePicker)window.setupMatchInvitePicker(dlg);
